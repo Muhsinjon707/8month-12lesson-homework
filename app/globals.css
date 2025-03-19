@@ -11,16 +11,53 @@
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
-
+/* 
 @media (prefers-color-scheme: dark) {
   :root {
     --background: #0a0a0a;
     --foreground: #ededed;
   }
-}
+} */
 
 body {
   background: var(--background);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+ul > li {
+  font-weight: 500;
+  font-size: 1.2rem;
+}
+
+li:hover a, li:hover button {
+  color: #282727;
+} 
+
+.avatar {
+  position: relative;
+}
+
+.inner-avatar {
+  visibility: hidden;
+  opacity: 0;
+  position: absolute;
+  top: 30px;
+  right: 0;
+  background-color: #282727;
+  padding: 8px 10px;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  transition: all .7s ease;
+}
+
+.avatar:hover .inner-avatar {
+  visibility: visible;
+  opacity: 1;
 }
