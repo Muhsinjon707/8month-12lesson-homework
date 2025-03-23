@@ -6,74 +6,61 @@ import useFetch from "../hooks/useFetch";
 
 // redux
 import { useDispatch, useSelector } from "react-redux";
-import { RootState, AppDispatch } from "../store/store";
+import { RootState } from "../store/store";
+
+// Lodash debounce
+import { useDebounce } from "use-debounce";
 
 // interface
-type User = {
-  name: string;
-  username: string;
-  profile_image: { small: string };
-  bio?: string;
-};
-
-interface UnsplashPhoto {
-  id: string;
-  promoted_at: string;
-  urls: { regular: string };
-  alt_description: string;
-  user: User;
-  links: { download: string };
-  created_at?: string;
-  updated_at?: string;
-  likes?: number;
-  description?: string;
-  width?: number;
-}
+import { UnsplashPhoto } from "../model/UnspashPhoto";
 
 interface UnsplashResponse {
   results: UnsplashPhoto[];
 }
 
-interface ProductProps {
-  searchQuery: string;
-}
-
 const ACCESS_KEY: string | undefined = process.env.NEXT_PUBLIC_ACCESS_KEY;
 
-const Products = ({ searchQuery }: ProductProps) => {
+const Products = () => {
   const [filteredImages, setFilteredImages] = useState<UnsplashPhoto[]>([]);
   const [pageParam, setPageParam] = useState(1);
 
+  const searchQuery = useSelector(
+    (state: RootState) => state.search.searchQuery
+  );
   const prevSearchParams = useRef(searchQuery);
 
+  const [debouncedQuery] = useDebounce(searchQuery, 500);
+
   if (!ACCESS_KEY) {
-    if (process.env.NODE_ENV === "development") {
-      throw new Error("Unsplash API Access Key is missing!");
-    }
     return <p className="text-red-500">API key is missing</p>;
   }
 
   const { data, isPending, isError } = useFetch<UnsplashResponse>(
     `https://api.unsplash.com/search/photos?client_id=${ACCESS_KEY}&query=${
-      searchQuery || "all"
+      debouncedQuery || "all"
     }&page=${pageParam}&per_page=20`
   );
 
   useEffect(() => {
-    if (data && data.results) {
+    if (data?.results) {
       setFilteredImages((prev) => {
-        return pageParam === 1 ? data.results : [...prev, ...data.results];
+        const newImages =
+          pageParam === 1 ? data.results : [...prev, ...data.results];
+
+        return Array.from(new Set(newImages.map((img) => img.id))).map(
+          (id) => newImages.find((img) => img.id === id)!
+        );
       });
     }
   }, [data]);
 
   useEffect(() => {
-    if (searchQuery !== prevSearchParams.current) {
+    if (debouncedQuery !== prevSearchParams.current) {
       setFilteredImages([]);
       setPageParam(1);
-      prevSearchParams.current = searchQuery;
+      prevSearchParams.current = debouncedQuery;
     }
-  }, [searchQuery]);
+  }, [debouncedQuery]);
 
   return (
     <div className="mt-24 flex flex-col items-center">
@@ -86,8 +73,9 @@ const Products = ({ searchQuery }: ProductProps) => {
       {filteredImages.length > 0 ? (
         <ImageLayout images={filteredImages} />
       ) : (
-        !isPending && <p>No images found for "{searchQuery}"</p>
+        !isPending && <p>No images found for "{debouncedQuery}"</p>
       )}
+
       {!isPending && (
         <button
           onClick={() => setPageParam(pageParam + 1)}

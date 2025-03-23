@@ -29,15 +29,6 @@ body {
   justify-content: center;
 }
 
-ul > li {
-  font-weight: 500;
-  font-size: 1.2rem;
-}
-
-li:hover a, li:hover button {
-  color: #282727;
-} 
-
 .avatar {
   position: relative;
 }

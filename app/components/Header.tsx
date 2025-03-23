@@ -14,12 +14,7 @@ import CustomInput from "./CustomSearch";
 import { GiHamburgerMenu } from "react-icons/gi";
 import { MdOutlinePlaylistRemove } from "react-icons/md";
 
-interface HeaderProps {
-  searchQuery: string;
-  setSearchQuery: (value: string) => void;
-}
-
-const Header = ({ searchQuery, setSearchQuery }: HeaderProps) => {
+const Header = () => {
   const [isOpen, setOpen] = useState(false);
 
   return (
@@ -51,34 +46,29 @@ const Header = ({ searchQuery, setSearchQuery }: HeaderProps) => {
           className=" 
             w-2/3 flex items-center 
             justify-center xl:justify-between 
-            gap-8 xl:gap-0
+            gap-8 xl:gap-3
           "
         >
           <div className="self-center">
             <CustomInput
               type="text"
-              value={searchQuery}
-              onChange={setSearchQuery}
               placeholder="Search images..."
               name="search"
             />
           </div>
           <div className="flex items-center">
-            <ul
-              className="
-                hidden lg:flex items-center space-x-8 font-extralight text-white
-              "
-            >
-              <li>
+            <ul className="group hidden lg:flex items-center space-x-10 font-light text-white tracking-wide">
+              <li className="relative transition-all duration-300 ease-in-out hover:text-lg hover:font-medium hover:text-gray-200">
                 <Link href="/">Photos</Link>
               </li>
-              <li className="flex items-center gap-4">
+              <li className="relative transition-all duration-300 ease-in-out hover:text-lg hover:font-medium hover:text-gray-200">
+                <Link href="/collections">Collections</Link>
+              </li>
+              <li className="relative transition-all duration-300 ease-in-out hover:text-lg hover:font-medium hover:text-gray-200">
                 <Link href="/login">Login</Link>
               </li>
-              <li className="flex items-center gap-4">
-                <Link href="/register">Register</Link>
-              </li>
             </ul>
+
             <div className="scale-200 lg:hidden">
               <GiHamburgerMenu onClick={() => setOpen(true)} />
             </div>
@@ -103,20 +93,20 @@ const Header = ({ searchQuery, setSearchQuery }: HeaderProps) => {
               </li>
               <li className="w-full">
                 <Link
+                  href="/collections"
+                  className="block w-full p-3 text-lg font-medium text-black transition-all duration-200 
+                 bg-white hover:bg-gray-300 hover:text-white rounded-lg"
+                >
+                  Collections
+                </Link>
+              </li>
+              <li className="w-full">
+                <Link
                   href="/login"
                   className="block w-full p-3 text-lg font-medium text-black transition-all duration-200 
                  bg-white hover:bg-gray-300 hover:text-white rounded-lg"
                 >
                   Login
-                </Link>
-              </li>
-              <li className="w-full">
-                <Link
-                  href="/register"
-                  className="block w-full p-3 text-lg font-medium text-black transition-all duration-200 
-                 bg-white hover:bg-gray-300 hover:text-white rounded-lg"
-                >
-                  Register
                 </Link>
               </li>
             </ul>

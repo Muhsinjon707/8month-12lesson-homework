@@ -7,7 +7,7 @@ const Register = () => {
       <div
         className="
         w-[1000px] h-[650px] absolute top-1/2 left-1/2 -translate-1/2 bg-[#2c2638] overflow-y-hidden 
-        flex justify-between gap-8 p-4 rounded-2xl items-center
+        flex justify-between gap-8 p-4 rounded-2xl items-center mt-8
       "
       >
         <div>

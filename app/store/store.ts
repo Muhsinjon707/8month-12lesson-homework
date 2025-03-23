@@ -1,16 +1,18 @@
 import { configureStore } from "@reduxjs/toolkit";
 
 // slices
-import likedReducer from "./slice/favoritesSlice"
-import collectionsReducer from "./slice/collectionsSlice"
-import modalReducer from "./slice/modalSlice"
+import likedReducer from "./slice/favoritesSlice";
+import collectionsReducer from "./slice/collectionsSlice";
+import modalReducer from "./slice/modalSlice";
+import searchReducer from "./slice/searchSlice";
 
 export const store = () => {
   return configureStore({
     reducer: {
-      "liked": likedReducer,
-      "collections": collectionsReducer,
-      "modal": modalReducer
+      liked: likedReducer,
+      collections: collectionsReducer,
+      modal: modalReducer,
+      search: searchReducer,
     },
   });
 };

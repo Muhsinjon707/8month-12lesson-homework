@@ -1,20 +1,23 @@
 "use client";
 
+// Redux
+import { useSelector, useDispatch } from "react-redux";
+
+// Redux slice action
+import { setSearchQuery } from "../store/slice/searchSlice";
+import { RootState } from "../store/store";
+
 interface InputTypes {
-  value: string;
-  onChange: (value: string) => void;
   type: string;
   placeholder: string;
   name: string;
 }
 
-const CustomInput = ({
-  value,
-  onChange,
-  type,
-  placeholder,
-  name,
-}: InputTypes) => {
+const CustomInput = ({ type, placeholder, name }: InputTypes) => {
+  const dispatch = useDispatch();
+  const searchQuery = useSelector(
+    (state: RootState) => state.search.searchQuery
+  );
 
   return (
     <label
@@ -40,17 +43,17 @@ const CustomInput = ({
       </svg>
 
       <input
-        value={value}
-        onChange={(e) => onChange(e.target.value)}
+        value={searchQuery}
+        onChange={(e) => dispatch(setSearchQuery(e.target.value))}
         type={type}
         placeholder={placeholder}
         name={name}
         className="w-full ml-2 sm:ml-3 text-xs sm:text-sm md:text-base focus:outline-none"
       />
 
-      {value && (
+      {searchQuery && (
         <button
-          onClick={() => onChange("")}
+          onClick={() => dispatch(setSearchQuery(""))}
           className="text-gray-500 hover:text-black ml-2 sm:ml-3 cursor-pointer"
         >
           ✖
