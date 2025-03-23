@@ -84,6 +84,8 @@ const collectionSlice = createSlice({
         saveToLocalStorage(state.collections);
       }
     },
+
+    // Clear out all the collections
     clearAllCollections: (state) => {
       state.collections = [];
       localStorage.removeItem("collections");

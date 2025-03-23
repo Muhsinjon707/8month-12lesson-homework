@@ -92,7 +92,7 @@ const ModalLeft: React.FC<ModalLeftProps> = ({
                     </div>
                   </div>
                   <button className="opacity-0 invisible group-hover:opacity-100 group-hover:visible transition">
-                    {exists ? <FaPlus /> : <FaMinus />}
+                    {exists ? <FaMinus /> : <FaPlus />}
                   </button>
                 </div>
               );

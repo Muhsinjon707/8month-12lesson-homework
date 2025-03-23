@@ -2,75 +2,117 @@
 
 import React from "react";
 
+// React icons
+import { FiMinus } from "react-icons/fi";
+
 // Redux
 import { useSelector, useDispatch } from "react-redux";
 
+// Redux actions
+import { deleteCollection } from "@/app/store/slice/collectionsSlice";
+
 // Redux store config..
 import { RootState } from "@/app/store/store";
+
+// Project components
+import Image from "@/app/components/Image";
+
+// Framer motion
+import { motion } from "framer-motion";
 
 const Collections = () => {
   const collections = useSelector(
     (state: RootState) => state.collections.collections
   );
 
-  console.log("Collections: ", collections);
+  const dispatch = useDispatch();
+
+  function handleDeleteCollection(id: string) {
+    if (window.confirm("Do you want to delete this")) {
+      dispatch(deleteCollection(id));
+    }
+  }
 
   return (
-    <div className="bg-[#5c566d] min-h-screen">
-      <h2 className="text-xl font-bold">Collections</h2>
-      <p className="text-black">
-        Explore the world through collections of beautiful images free to use
-        under the
-        <a href="#" className="text-blue-500">
-          Unsplash License
-        </a>
-      </p>
-      <div className="flex items-center justify-center min-h-screen bg-white p-8">
-        {collections.length > 0 &&
-          collections.map((item, index) => (
-            <div
-              key={index}
-              className="w-[600px] bg-white rounded-lg shadow-lg p-4"
-            >
-              <div className="grid grid-cols-3 gap-2">
-                <div className="col-span-2 relative overflow-hidden rounded-lg">
-                  <img
-                    className="w-full h-full object-cover motion-blur"
-                    src={`${item.images[0]}`}
-                    alt="Blurred"
-                  />
-                </div>
-                <div className="grid grid-rows-2 gap-2">
-                  <div className="relative overflow-hidden rounded-lg">
-                    <img
-                      className="w-full h-full object-cover motion-blur"
-                      src={`${item.images[1]}`}
-                      alt="Blurred Small"
-                    />
-                  </div>
-                  <div className="relative overflow-hidden rounded-lg">
-                    <img
-                      className="w-full h-full object-cover motion-blur"
-                      src={`${item.images[2]}`}
-                      alt="Blurred Small"
-                    />
-                  </div>
-                </div>
-              </div>
-              <div className="mt-4">
-                <h2 className="text-lg font-semibold">{item.description}</h2>
-                <p className="text-gray-500 text-sm">
-                  {item.images.length} images · Curated by Unsplash+ Collections
-                </p>
-                <div className="mt-2 flex space-x-2">
-                  <span className="bg-gray-200 text-gray-700 text-xs px-3 py-1 rounded-full">
-                    {item.name}
-                  </span>
-                </div>
-              </div>
-            </div>
-          ))}
+    <div className="min-h-screen container max-w-7xl flex flex-col gap-10 items-start justify-center mx-auto">
+      <div className="mt-25">
+        <h2 className="text-5xl font-bold">Collections</h2>
+        <p className="text-black text-xl flex gap-1 pl-1">
+          Explore the world through collections of beautiful images free to use
+          under the
+          <a href="#" className="text-blue-500">
+            Unsplash License
+          </a>
+        </p>
       </div>
+      <motion.div
+        initial={{ opacity: 0, y: 30 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+        className={`
+          flex gap-8 items-center p-1 flex-wrap
+          ${collections.length > 3 ? "justify-between" : "justify-center"} 
+        `}
+      >
+        {collections.length > 0 &&
+          collections.map((item, index) => {
+            console.log("Images content: ", item.images);
+            return (
+              <motion.div
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                whileHover={{
+                  scale: 1.05,
+                  boxShadow: "0px 10px 20px rgba(0,0,0,0.15)",
+                }}
+                transition={{ duration: 0.3, ease: "easeInOut" }}
+                key={index}
+                className="
+                  max-w-[400px] w-full h-[400px] rounded-lg shadow-xl p-4 overflow-hidden
+                  transition-shadow duration-300 ease-in hover:shadow-2xl bg-white
+                "
+              >
+                <Image images={item.images} />
+                <div className="flex flex-col justify-between mt-4 max-h-[100px] h-full">
+                  <div>
+                    <h2
+                      title="Collection description"
+                      className="text-lg font-semibold"
+                    >
+                      {item.description
+                        ? item.description
+                        : "No description available"}
+                    </h2>
+                    <p className="text-gray-500 text-sm">
+                      {item.images.length} images · Curated by Unsplash+
+                      Collections
+                    </p>
+                  </div>
+                  <div className="w-full mt-2 flex justify-between space-x-2">
+                    <span
+                      className="bg-gray-200 text-gray-700 text-xs px-3 py-1 rounded-full"
+                      title="Collection name"
+                    >
+                      {item.name}
+                    </span>
+                    <motion.button
+                      onClick={() => handleDeleteCollection(item.id)}
+                      whileHover={{ scale: 1.2 }}
+                      whileTap={{ scale: 0.9 }}
+                      className="
+                        cursor-pointer hover:bg-gray-300 p-1 rounded-full
+                        transition-bg duration-150 ease-linear
+                      "
+                      title="Remove a collection"
+                    >
+                      <FiMinus />
+                    </motion.button>
+                  </div>
+                </div>
+              </motion.div>
+            );
+          })}
+      </motion.div>
     </div>
   );
 };

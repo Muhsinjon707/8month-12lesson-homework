@@ -33,6 +33,9 @@ import CollectionModal from "./CollectionModal";
 // Interface import
 import { UnsplashPhoto } from "../model/UnspashPhoto";
 
+// Framer motion
+import { motion } from "framer-motion";
+
 interface ImageLayoutProps {
   images: UnsplashPhoto[];
 }
@@ -71,7 +74,13 @@ const ImageLayout: React.FC<ImageLayoutProps> = ({ images }) => {
         <Masonry gutter="10px">
           {images.length ? (
             images.map((image) => (
-              <div key={image.id} className="relative group text-white">
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, ease: "easeInOut" }}
+                key={image.id}
+                className="relative group text-white"
+              >
                 <div
                   className="
                     invisible opacity-0 group-hover:visible group-hover:opacity-100 transition-all duraction-300
@@ -162,7 +171,7 @@ const ImageLayout: React.FC<ImageLayoutProps> = ({ images }) => {
                     </a>
                   </span>
                 </div>
-              </div>
+              </motion.div>
             ))
           ) : (
             <div></div>
