@@ -1,7 +1,7 @@
 "use client";
 
 // React
-import React from "react";
+import React, { useState } from "react";
 
 // Redux
 import { useDispatch, useSelector } from "react-redux";
@@ -21,6 +21,11 @@ import { AiOutlineLike } from "react-icons/ai";
 
 // Addition libraries
 import { motion } from "framer-motion";
+import { UnsplashPhoto } from "../model/UnspashPhoto";
+import {
+  addToFavorites,
+  removeFromFavorites,
+} from "../store/slice/favoritesSlice";
 
 // Date formatting function
 const formatDate = (isoDate?: string) => {
@@ -33,10 +38,30 @@ const formatDate = (isoDate?: string) => {
 };
 
 const ImageModal: React.FC = () => {
+  const [changeDownload, setDownload] = useState(false);
+
   const dispatch = useDispatch();
   const { isOpen, imageData } = useSelector(
     (state: RootState) => state.modal.imageModal
   );
+
+  // Favorites config.
+  const favoritesList = useSelector(
+    (state: RootState) => state.liked.likedImages
+  );
+
+  // Check if image is in favorites
+  const isFavorite = (imageId: string) =>
+    favoritesList.some((item) => item.id === imageId);
+
+  // Handle Add/Remove from Favorites
+  function handleAddToFavorites(image: UnsplashPhoto) {
+    if (isFavorite(image.id)) {
+      dispatch(removeFromFavorites(image.id));
+    } else {
+      dispatch(addToFavorites(image));
+    }
+  }
 
   if (!isOpen || !imageData) return null;
 
@@ -84,19 +109,59 @@ const ImageModal: React.FC = () => {
           </div>
 
           <div className="flex gap-2">
-            <button className="p-2 bg-gray-200 rounded-lg hover:bg-gray-300 transition">
+            <button
+              onClick={() => handleAddToFavorites(imageData)}
+              className={`
+                rounded-lg transition px-3
+                ${
+                  isFavorite(imageData.id)
+                    ? "bg-red-500 hover:bg-red-600 text-white"
+                    : "bg-gray-200 hover:bg-gray-300 text-black"
+                }
+              `}
+            >
               <FaHeart />
             </button>
-            <button className="p-2 bg-gray-200 rounded-lg hover:bg-gray-300 transition">
+            <button className="px-3 bg-gray-200 rounded-lg hover:bg-gray-300 transition">
               <FaPlus />
             </button>
             <div className="flex">
-              <button className="px-4 py-2 bg-gray-200 rounded-l-lg hover:bg-gray-300 transition">
+              <a
+                href={imageData.links.download + "&force=true"}
+                className="px-4 py-2 bg-gray-200 rounded-l-lg hover:bg-gray-300 transition"
+              >
                 Download
-              </button>
-              <button className="px-3 py-2 bg-gray-300 rounded-r-lg">
-                <IoIosArrowDown />
-              </button>
+              </a>
+              <div className="group relative transition duration-300 ease-in-out">
+                <button
+                  onClick={() => setDownload(!changeDownload)}
+                  className="px-3 py-3 bg-gray-200 hover:bg-gray-300 rounded-r-lg"
+                >
+                  <IoIosArrowDown />
+                </button>
+                <ul
+                  className={`
+                    ${
+                      changeDownload
+                        ? "opacity-100 visible scale-100"
+                        : "opacity-0 invisible scale-95"
+                    } 
+                    absolute top-11 right-0 bg-white shadow-lg rounded-lg w-48 
+                    transition-all duration-300 ease-in-out transform origin-top-right
+                    border border-gray-300 overflow-hidden
+                  `}
+                >
+                  <li className="px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer">
+                    Small <span className="text-gray-500">(640x426)</span>
+                  </li>
+                  <li className="px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer">
+                    Medium <span className="text-gray-500">(1920x1280)</span>
+                  </li>
+                  <li className="px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer">
+                    Large <span className="text-gray-500">(2400x1600)</span>
+                  </li>
+                </ul>
+              </div>
             </div>
           </div>
         </div>
