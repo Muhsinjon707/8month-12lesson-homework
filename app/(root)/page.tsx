@@ -1,11 +1,20 @@
-import React from 'react'
+"use client";
+
+import React, { useState } from "react";
+
+// components
+import Header from "../components/Header";
+import Products from "../components/Products";
 
 const Home = () => {
-  return (
-    <div className='container mx-auto mt-5 bg-red-500 min-h-screen'>
-      Home
-    </div>
-  )
-}
+  const [searchQuery, setSearchQuery] = useState("");
 
-export default Home
+  return (
+    <div className="container mx-auto mt-5 min-h-screen">
+      <Header searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
+      <Products searchQuery={searchQuery}/>
+    </div>
+  );
+};
+
+export default Home;
