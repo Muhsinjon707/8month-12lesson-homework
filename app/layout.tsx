@@ -2,8 +2,12 @@ import type { Metadata } from "next";
 import { Mona_Sans } from "next/font/google";
 import "./globals.css";
 
-// redux
+// Redux
 import StoreProvider from "./store/storeProvider";
+
+// Components
+import AuthWrapper from "./components/AuthWrapper";
+import { ToastContainer } from "react-toastify";
 
 const monoSans = Mona_Sans({
   variable: "--font-mono-sans",
@@ -23,7 +27,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${monoSans.className}`}>
-        <StoreProvider>{children}</StoreProvider>
+        <StoreProvider>
+          <AuthWrapper>{children}</AuthWrapper>
+          <ToastContainer position="bottom-right" />
+        </StoreProvider>
       </body>
     </html>
   );

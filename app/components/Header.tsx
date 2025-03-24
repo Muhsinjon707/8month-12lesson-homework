@@ -1,7 +1,7 @@
 "use client";
 
 // react
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 // next links
 import Link from "next/link";
@@ -13,42 +13,58 @@ import CustomInput from "./CustomSearch";
 // react-icons
 import { GiHamburgerMenu } from "react-icons/gi";
 import { MdOutlinePlaylistRemove } from "react-icons/md";
+import { FaDownload } from "react-icons/fa6";
+import { BsFillCollectionFill } from "react-icons/bs";
+import { LuLogIn } from "react-icons/lu";
+import { HiMiniPhoto } from "react-icons/hi2";
+
+// Dark/Light Mode icons
+import { WiMoonAltWaningCrescent5 } from "react-icons/wi";
+import { WiMoonAltWaningGibbous2 } from "react-icons/wi";
+
+// Redux
+import { useSelector, useDispatch } from "react-redux";
+
+// Redux | DarkModaSlice actions
+import { toggleDarkMode } from "../store/slice/darkModeSlice";
+
+// Redux store config..
+import { RootState } from "../store/store";
 
 const Header = () => {
   const [isOpen, setOpen] = useState(false);
 
+  const darkMode = useSelector((state: RootState) => state.darkMode.darkMode);
+
+  console.log("Darkmode: ", darkMode);
+
+  const dispatch = useDispatch();
+
+  const user = useSelector((state: RootState) => state.login.user);
+  console.log(user);
+
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 mx-auto text-black py-3 px-16 shadow-lg bg-[#292434]">
-      <nav
-        className="
-          flex w-full justify-between items-center 
-          gap-2 xs:gap-10 sm:gap-3 md:gap-4
-          flex-col xs:flex-row sm:flex-col xl:flex-row
-        "
-      >
+    <header
+      className={` ${darkMode == "dark" ? "bg-[#292434] text-white" : "bg-white text-black"} fixed top-0 right-0 left-0 z-50 mx-auto px-16 py-3 shadow-lg`}
+    >
+      <nav className="xs:gap-10 xs:flex-row flex w-full flex-col items-center justify-between gap-2 sm:flex-col sm:gap-3 md:gap-4 xl:flex-row">
         <Link
           href="/"
           title="My website"
-          className="w-1/3 flex items-center self-start sm:self-center lg:justify-start gap-2"
+          className="flex w-1/3 items-center gap-2 self-start sm:self-center lg:justify-start"
         >
           <Image
-            className="w-auto h-auto rounded-md"
+            className="h-auto w-auto rounded-md"
             src="/unsplash-logo.jpg"
             alt="Unsplash Logo"
             width={40}
             height={30}
           />
-          <span className="flex items-center space-x-8  font-extrabold text-3xl text-white">
+          <span className="flex items-center space-x-8 text-3xl font-extrabold">
             Muhsinjon.
           </span>
         </Link>
-        <div
-          className=" 
-            w-2/3 flex items-center 
-            justify-center xl:justify-between 
-            gap-8 xl:gap-3
-          "
-        >
+        <div className="flex w-2/3 items-center justify-center gap-8 xl:justify-between xl:gap-5">
           <div className="self-center">
             <CustomInput
               type="text"
@@ -56,57 +72,97 @@ const Header = () => {
               name="search"
             />
           </div>
-          <div className="flex items-center">
-            <ul className="group hidden lg:flex items-center space-x-10 font-light text-white tracking-wide">
-              <li className="relative transition-all duration-300 ease-in-out hover:text-lg hover:font-medium hover:text-gray-200">
-                <Link href="/">Photos</Link>
-              </li>
-              <li className="relative transition-all duration-300 ease-in-out hover:text-lg hover:font-medium hover:text-gray-200">
-                <Link href="/collections">Collections</Link>
-              </li>
-              <li className="relative transition-all duration-300 ease-in-out hover:text-lg hover:font-medium hover:text-gray-200">
-                <Link href="/login">Login</Link>
-              </li>
-            </ul>
-
-            <div className="scale-200 lg:hidden">
-              <GiHamburgerMenu onClick={() => setOpen(true)} />
+          <div className="flex items-center gap-5">
+            <div
+              onClick={() => dispatch(toggleDarkMode())}
+              title={`The current mode is: ${darkMode}`}
+              className="scale-200 cursor-pointer"
+            >
+              {darkMode === "dark" ? (
+                <WiMoonAltWaningGibbous2 />
+              ) : (
+                <WiMoonAltWaningCrescent5 />
+              )}
             </div>
+            <div
+              onClick={() => setOpen(true)}
+              className="mx-2 scale-200 cursor-pointer"
+            >
+              {!isOpen && <GiHamburgerMenu />}
+            </div>
+            <div className="group relative flex items-center">
+              <img
+                src={user?.photoURL || "/default-avatar.png"}
+                alt={user?.displayName || "User Avatar"}
+                className="h-14 w-14 rounded-full border-2 border-gray-300 shadow-md transition-all duration-300 hover:scale-105"
+              />
+
+              <div className="absolute top-16 right-0 hidden w-74 flex-col gap-3 rounded-lg border border-gray-200 bg-white p-4 shadow-xl group-hover:flex dark:border-gray-700 dark:bg-gray-900">
+                <h4 className="text-sm font-semibold text-gray-800 dark:text-white">
+                  Name:{" "}
+                  <span className="font-normal">
+                    {user?.displayName || "Guest"}
+                  </span>
+                </h4>
+                <h3 className="text-sm text-gray-600 dark:text-gray-400">
+                  Email:{" "}
+                  <span className="font-normal">{user?.email || "N/A"}</span>
+                </h3>
+              </div>
+            </div>
+
             <ul
-              className={`
-                  ${isOpen ? "opacity-100 visible" : "opacity-0 invisible"}
-                  absolute top-0 right-0 min-h-screen w-[350px] bg-white shadow-lg rounded-l-xl
-                  flex flex-col items-start gap-3 p-6 transition-all duration-300 ease-in-out  
-              `}
+              className={` ${
+                isOpen
+                  ? "visible bg-white/30 opacity-100 backdrop-blur-md"
+                  : "invisible opacity-0"
+              } absolute top-0 right-0 flex min-h-screen w-[350px] flex-col items-start gap-3 rounded-l-xl p-6 shadow-lg transition-all duration-300 ease-in-out`}
             >
               <div className="absolute top-4 right-4 scale-180 cursor-pointer">
                 <MdOutlinePlaylistRemove onClick={() => setOpen(false)} />
               </div>
-              <li className="w-full">
+              <li className="mt-10 w-full">
                 <Link
                   href="/"
-                  className="block w-full p-3 text-lg font-medium text-black transition-all duration-200 
-                 bg-white hover:bg-gray-300 hover:text-white rounded-lg"
+                  className="flex w-full items-center justify-between rounded-lg bg-white p-3 text-lg font-medium text-black transition-all duration-200 hover:bg-gray-300 hover:text-white"
                 >
                   Photos
+                  <span>
+                    <HiMiniPhoto />
+                  </span>
                 </Link>
               </li>
               <li className="w-full">
                 <Link
                   href="/collections"
-                  className="block w-full p-3 text-lg font-medium text-black transition-all duration-200 
-                 bg-white hover:bg-gray-300 hover:text-white rounded-lg"
+                  className="flex w-full items-center justify-between rounded-lg bg-white p-3 text-lg font-medium text-black transition-all duration-200 hover:bg-gray-300 hover:text-white"
                 >
                   Collections
+                  <span>
+                    <BsFillCollectionFill />
+                  </span>
+                </Link>
+              </li>
+              <li className="w-full">
+                <Link
+                  href="/downloads"
+                  className="flex w-full items-center justify-between rounded-lg bg-white p-3 text-lg font-medium text-black transition-all duration-200 hover:bg-gray-300 hover:text-white"
+                >
+                  Downloads
+                  <span>
+                    <FaDownload />
+                  </span>
                 </Link>
               </li>
               <li className="w-full">
                 <Link
                   href="/login"
-                  className="block w-full p-3 text-lg font-medium text-black transition-all duration-200 
-                 bg-white hover:bg-gray-300 hover:text-white rounded-lg"
+                  className="flex w-full items-center justify-between rounded-lg bg-white p-3 text-lg font-medium text-black transition-all duration-200 hover:bg-gray-300 hover:text-white"
                 >
                   Login
+                  <span>
+                    <LuLogIn />
+                  </span>
                 </Link>
               </li>
             </ul>

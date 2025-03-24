@@ -21,6 +21,8 @@ interface UnsplashResponse {
 const ACCESS_KEY: string | undefined = process.env.NEXT_PUBLIC_ACCESS_KEY;
 
 const Products = () => {
+  const darkMode = useSelector((state: RootState) => state.darkMode.darkMode);
+
   const [filteredImages, setFilteredImages] = useState<UnsplashPhoto[]>([]);
   const [pageParam, setPageParam] = useState(1);
 
@@ -79,11 +81,13 @@ const Products = () => {
       {!isPending && (
         <button
           onClick={() => setPageParam(pageParam + 1)}
-          className="
-            bg-violet-200 text-gray-800 border border-gray-300 
+          className={`
+             border border-gray-300 
             hover:bg-gray-200 hover:border-gray-500 transition duration-200
-            shadow-md rounded-lg py-2 px-4 my-5
-          "
+            shadow-md rounded-lg py-2 px-4 my-5  
+
+            ${darkMode == "dark" ? "bg-violet-200 text-gray-800" : "bg-blue-500 text-white"}
+          `}
         >
           Load more
         </button>

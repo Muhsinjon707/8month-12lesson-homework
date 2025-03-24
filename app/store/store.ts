@@ -5,6 +5,9 @@ import likedReducer from "./slice/favoritesSlice";
 import collectionsReducer from "./slice/collectionsSlice";
 import modalReducer from "./slice/modalSlice";
 import searchReducer from "./slice/searchSlice";
+import downloadsReducer from "./slice/downloadsSlice";
+import darkModeReducer from "./slice/darkModeSlice";
+import loginReducer from "./slice/loginSlice";
 
 export const store = () => {
   return configureStore({
@@ -13,6 +16,9 @@ export const store = () => {
       collections: collectionsReducer,
       modal: modalReducer,
       search: searchReducer,
+      downloads: downloadsReducer,
+      darkMode: darkModeReducer,
+      login: loginReducer,
     },
   });
 };

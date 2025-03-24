@@ -35,6 +35,10 @@ import { UnsplashPhoto } from "../model/UnspashPhoto";
 
 // Framer motion
 import { motion } from "framer-motion";
+import {
+  addToDownloads,
+  removeFromDownloads,
+} from "../store/slice/downloadsSlice";
 
 interface ImageLayoutProps {
   images: UnsplashPhoto[];
@@ -63,6 +67,24 @@ const ImageLayout: React.FC<ImageLayoutProps> = ({ images }) => {
       dispatch(removeFromFavorites(image.id));
     } else {
       dispatch(addToFavorites(image));
+    }
+  }
+
+  // Downloads List
+  const downloadsList = useSelector(
+    (state: RootState) => state.downloads.downloadsList
+  );
+
+  // Check if image is in downloads
+  const isInDownloads = (imageId: string) =>
+    downloadsList.some((item) => item.id === imageId);
+
+  // Handle Add/Remove from Downloads
+  function handleAddToDownloads(image: UnsplashPhoto) {
+    if (isInDownloads(image.id)) {
+      dispatch(removeFromDownloads(image.id));
+    } else {
+      dispatch(addToDownloads(image));
     }
   }
 
@@ -166,7 +188,11 @@ const ImageLayout: React.FC<ImageLayoutProps> = ({ images }) => {
                       "
                     title="Add to a collection"
                   >
-                    <a download href={image.links.download + "&force=true"}>
+                    <a
+                      onClick={() => handleAddToDownloads(image)}
+                      download
+                      href={image.links.download + "&force=true"}
+                    >
                       <HiArrowNarrowDown />
                     </a>
                   </span>

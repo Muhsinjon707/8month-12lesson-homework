@@ -86,7 +86,7 @@ const ImageModal: React.FC = () => {
         animate={{ y: 0, opacity: 1, scale: 1 }}
         exit={{ y: 50, opacity: 0, scale: 0.95 }}
         transition={{ duration: 0.4, ease: "easeInOut" }}
-        className="bg-white p-6 w-[80%] min-h-[70%] rounded-lg shadow-lg max-w-5xl flex flex-col gap-5"
+        className="bg-white p-6 w-[80%] min-h-[90%] rounded-lg shadow-lg max-w-5xl flex flex-col gap-5"
       >
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">

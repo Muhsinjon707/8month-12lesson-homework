@@ -11,6 +11,16 @@ import { FaGithub } from "react-icons/fa6";
 
 import validationLogin from "../utils/validationLogin";
 
+// Redux
+import { useSelector } from "react-redux";
+import { RootState } from "../store/store";
+
+// Register hooks
+import { useRegister } from "../hooks/useRegister";
+
+// toaster
+import { toast } from "react-toastify";
+
 const Signup = () => {
   const [show, setShow] = useState(false);
 
@@ -28,11 +38,21 @@ const Signup = () => {
     setErrors(validationErrors);
   }
 
+  const darkMode = useSelector((state: RootState) => state.darkMode.darkMode);
+
+  const { registerWithGoogle } = useRegister();
+
   return (
     <>
-      <h2 className="text-white text-3xl mb-5">Login First to Your Account</h2>
+      <h2
+        className={`${
+          darkMode == "dark" ? "text-white" : "text-black"
+        } mb-5 text-3xl`}
+      >
+        Login First to Your Account
+      </h2>
       {errors.length > 0 && (
-        <div className="text-red-500 text-sm">
+        <div className="text-sm text-red-500">
           {errors.map((err, index) => (
             <p key={index}>• {err}</p>
           ))}
@@ -40,27 +60,37 @@ const Signup = () => {
       )}
       <form
         onSubmit={handleSubmit}
-        className="w-full h-1/2 flex flex-col gap-4"
+        className="flex h-1/2 w-full flex-col gap-4"
       >
         <div>
           <input
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="p-3 w-full rounded-md outline-none bg-[#3c364c]"
+            className={`w-full rounded-md border-black p-3 shadow-md outline-none ${
+              darkMode == "dark"
+                ? "caret-black-500 bg-[#3c364c]"
+                : "bg-white caret-blue-600"
+            }`}
             type="email"
             placeholder="Email"
+            style={{ color: darkMode === "dark" ? "white" : "black" }}
           />
         </div>
         <div className="relative">
           <input
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            className="p-3 w-full rounded-md outline-none bg-[#3c364c]"
+            className={`w-full rounded-md border-black p-3 shadow-md outline-none ${
+              darkMode == "dark"
+                ? "bg-[#3c364c] caret-black"
+                : "bg-white caret-blue-600"
+            }`}
             type={show ? "text" : "password"}
             placeholder="Enter your password"
+            style={{ color: darkMode === "dark" ? "white" : "black" }}
           />
           <div className="cursor-pointer text-[#4a4063]">
-            {show ? (
+            {!show ? (
               <FaRegEyeSlash
                 onClick={() => setShow(!show)}
                 className="absolute top-1/2 right-1 -translate-1/2"
@@ -78,36 +108,64 @@ const Signup = () => {
             <input
               checked={doRemember}
               onChange={(e) => setRemember(e.target.checked)}
-              className=""
+              className="login-custom-checkbox"
               type="checkbox"
             />
-            <p className="text-sm">Remember me</p>
+            <p
+              className={`${
+                darkMode == "dark" ? "text-white" : "text-black"
+              } text-sm`}
+            >
+              Remember me
+            </p>
           </div>
-          <Link href="/" className="text-green-300 underline">
+          <Link
+            href="/"
+            className={`${
+              darkMode == "dark" ? "text-green-300" : "text-blue-300"
+            } underline`}
+          >
             Forgot Password
           </Link>
         </div>
         <div>
-          <Link href="/register" className="text-violet-800 underline">Register here</Link>
+          <Link
+            href="/register"
+            className={`${
+              darkMode == "dark" ? "text-violet-800" : "text-blue-500"
+            } underline`}
+          >
+            Register here
+          </Link>
         </div>
         <div>
-          <button className="w-full py-3 bg-violet-500 rounded-md mt-5">
+          <button
+            className={`w-full py-3 ${
+              darkMode == "dark" ? "bg-violet-500" : "bg-blue-500"
+            } mt-5 rounded-md`}
+          >
             Login
           </button>
         </div>
         <div>
-          <p
-            className="relative text-gray-300 before:content-[''] before:absolute before:left-0 before:top-1/2 before:w-32 before:h-px before:bg-gray-500 
-                after:content-[''] after:absolute after:right-0 after:top-1/2 after:w-32 after:h-px after:bg-gray-500 text-center font-light text-xs opacity-30"
-          >
+          <p className="relative text-center text-xs font-light text-gray-500 opacity-30 before:absolute before:top-1/2 before:left-0 before:h-px before:w-32 before:bg-gray-500 before:content-[''] after:absolute after:top-1/2 after:right-0 after:h-px after:w-32 after:bg-gray-500 after:content-['']">
             Or register with
           </p>
         </div>
-        <div className="flex justify-between items-center gap-3">
-          <button className="cursor-pointer w-1/2 py-2 rounded-md opacity-70 border border-white inline-flex justify-center items-center gap-2">
-            <FcGoogle className="scale-125" /> Google
+        <div
+          className={`flex items-center justify-between gap-3 ${
+            darkMode == "dark" ? "text-white" : "text-black"
+          }`}
+        >
+          <button
+            onClick={registerWithGoogle}
+            className={`inline-flex w-1/2 cursor-pointer items-center justify-center gap-2 rounded-md border py-2 opacity-70 ${darkMode == "dark" ? "border-white" : "border-black"} `}
+          >
+            <FcGoogle id="google-login-btn" className="scale-125" /> Google
           </button>
-          <button className="cursor-pointer w-1/2 py-2 rounded-md opacity-70 border border-white inline-flex justify-center items-center gap-2">
+          <button
+            className={`inline-flex w-1/2 cursor-pointer items-center justify-center gap-2 rounded-md border py-2 opacity-70 ${darkMode == "dark" ? "border-white" : "border-black"} `}
+          >
             <FaGithub className="scale-125" /> GitHub
           </button>
         </div>

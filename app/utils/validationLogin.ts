@@ -10,7 +10,7 @@ const validationLogin: ValidTypes = (user_email, user_password) => {
   }
 
   if (user_password.length < 8) {
-    errors.push("Password should match to that of a register one!");
+    errors.push("Password should be at least 8 characters");
   }
 
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;

@@ -15,24 +15,28 @@ interface InputTypes {
 
 const CustomInput = ({ type, placeholder, name }: InputTypes) => {
   const dispatch = useDispatch();
+
   const searchQuery = useSelector(
     (state: RootState) => state.search.searchQuery
   );
 
+  const darkMode = useSelector((state: RootState) => state.darkMode.darkMode);
+
   return (
     <label
-      className="
-      xs:w-[320px] sm:w-[500px]
-      bg-[#3b334d] flex items-center rounded-lg text-white 
-      shadow-xl px-3 py-3 sm:mb-2 md:mb-0
-    "
+      className={`
+        xs:w-[320px] sm:w-[500px] flex items-center rounded-lg px-3 py-3 sm:mb-2 md:mb-0 
+        ${
+          darkMode == "dark" ? "bg-[#3b334d] text-white shadow-xl" : "bg-white text-black shadow"
+        }
+      `}
     >
       <svg
         className="h-4 w-4 sm:h-5 sm:w-5 md:h-6 md:w-6"
         xmlns="http://www.w3.org/2000/svg"
         fill="none"
         viewBox="0 0 24 24"
-        stroke="white"
+        stroke={`${darkMode == "dark" ? "white" : "black"}`}
       >
         <path
           strokeLinecap="round"

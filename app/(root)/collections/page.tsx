@@ -1,5 +1,9 @@
 "use client";
 
+// Next
+import { useRouter } from "next/navigation";
+
+// React
 import React from "react";
 
 // React icons
@@ -21,6 +25,8 @@ import Image from "@/app/components/Image";
 import { motion } from "framer-motion";
 
 const Collections = () => {
+  const darkMode = useSelector((state: RootState) => state.darkMode.darkMode);
+
   const collections = useSelector(
     (state: RootState) => state.collections.collections
   );
@@ -33,14 +39,28 @@ const Collections = () => {
     }
   }
 
+  // const router = useRouter();
+  // const handleRedirect = (id: string) => {
+  //   router.push(`collections/${id}`);
+  // };
+
   return (
     <div className="min-h-screen container max-w-7xl flex flex-col gap-10 items-start justify-center mx-auto">
-      <div className="mt-25">
+      <div
+        className={`mt-25 ${darkMode == "dark" ? "text-white" : "text-black"}`}
+      >
         <h2 className="text-5xl font-bold">Collections</h2>
-        <p className="text-black text-xl flex gap-1 pl-1">
+        <p className="text-xl flex gap-1 pl-1">
           Explore the world through collections of beautiful images free to use
           under the
-          <a href="#" className="text-blue-500">
+          <a
+            href="#"
+            className={
+              darkMode == "dark"
+                ? "text-violet-500 underline"
+                : "text-gray-300 underline"
+            }
+          >
             Unsplash License
           </a>
         </p>
@@ -50,31 +70,35 @@ const Collections = () => {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
         className={`
-          flex gap-8 items-center p-1 flex-wrap
+          flex gap-8 items-center p-1 flex-wrap mb-20
           ${collections.length > 3 ? "justify-between" : "justify-center"} 
         `}
       >
         {collections.length > 0 &&
           collections.map((item, index) => {
-            console.log("Images content: ", item.images);
             return (
               <motion.div
                 initial={{ opacity: 0, scale: 0.8 }}
                 animate={{ opacity: 1, scale: 1 }}
                 whileHover={{
-                  scale: 1.05,
+                  scale: 1.01,
                   boxShadow: "0px 10px 20px rgba(0,0,0,0.15)",
                 }}
                 transition={{ duration: 0.3, ease: "easeInOut" }}
                 key={index}
-                className="
+                className={`
                   max-w-[400px] w-full h-[400px] rounded-lg shadow-xl p-4 overflow-hidden
-                  transition-shadow duration-300 ease-in hover:shadow-2xl bg-white
-                "
+                  transition-shadow duration-300 ease-in hover:shadow-2xl 
+                  ${darkMode == "dark" ? "bg-[#292434]" : "bg-white"}  
+                `}
               >
                 <Image images={item.images} />
                 <div className="flex flex-col justify-between mt-4 max-h-[100px] h-full">
-                  <div>
+                  <div
+                    className={`${
+                      darkMode == "dark" ? "text-white" : "text-black"
+                    }`}
+                  >
                     <h2
                       title="Collection description"
                       className="text-lg font-semibold"
@@ -99,10 +123,12 @@ const Collections = () => {
                       onClick={() => handleDeleteCollection(item.id)}
                       whileHover={{ scale: 1.2 }}
                       whileTap={{ scale: 0.9 }}
-                      className="
+                      className={`
                         cursor-pointer hover:bg-gray-300 p-1 rounded-full
-                        transition-bg duration-150 ease-linear
-                      "
+                        transition-bg duration-150 ease-linear 
+                        
+                        ${darkMode == "dark" ? "text-white" : "text-black"}
+                      `}
                       title="Remove a collection"
                     >
                       <FiMinus />

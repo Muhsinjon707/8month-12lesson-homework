@@ -45,7 +45,7 @@ body {
   display: flex;
   flex-direction: column;
   gap: 5px;
-  transition: all .7s ease;
+  transition: all 0.7s ease;
 }
 
 .avatar:hover .inner-avatar {
@@ -60,5 +60,37 @@ form input::placeholder {
 }
 
 form input:not(:placeholder-shown) {
-  color: white
+  color: white;
+}
+
+.custom-dark-blue-checkbox,
+.login-custom-checkbox {
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  border: 2px solid #333;
+  border-radius: 4px;
+  background-color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.login-custom-checkbox:checked {
+  background-color: rgb(22, 22, 57);
+  border-color: rgb(22, 22, 57);
+}
+
+input[type="checkbox"]:checked {
+  background-color: rgb(22, 22, 57);
+  border-color: rgb(22, 22, 57);
+  position: relative;
+}
+
+input[type="checkbox"]:checked::after {
+  content: "✔";
+  color: white;
+  font-size: 16px;
+  font-weight: bold;
+  position: absolute;
 }

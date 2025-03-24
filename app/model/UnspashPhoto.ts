@@ -20,6 +20,7 @@ export interface UnsplashPhoto {
   likes?: number;
   description?: string;
   width?: number;
+  asset_type?: string
 
   [Symbol.iterator](): Iterator<string>;
 }
