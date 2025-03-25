@@ -27,42 +27,18 @@ import { useSelector, useDispatch } from "react-redux";
 
 // Redux | DarkModaSlice actions
 import { toggleDarkMode } from "../store/slice/darkModeSlice";
-import { logoutUser, setAuthReady } from "../store/slice/loginSlice";
 
 // Redux store config..
 import { RootState } from "../store/store";
 
-// firebase
-import { auth } from "../firebase/firebaseConfig";
-import { signOut } from "firebase/auth";
-
-// Toastify
-import { toast } from "react-toastify";
-
 const Header = () => {
   const [isOpen, setOpen] = useState(false);
-  const [isProfileOpen, setProfileOpen] = useState(false);
 
   const darkMode = useSelector((state: RootState) => state.darkMode.darkMode);
 
   const dispatch = useDispatch();
 
   const user = useSelector((state: RootState) => state.login.user);
-
-  async function signOutUser() {
-    try {
-      await signOut(auth);
-      dispatch(logoutUser());
-      dispatch(setAuthReady());
-      toast.success("Successfully signed out!");
-    } catch (error: any) {
-      if (error?.message) {
-        toast.error(error.message);
-      } else {
-        toast.error("Couldn't resolve while signing out");
-      }
-    }
-  }
 
   return (
     <header
@@ -112,19 +88,18 @@ const Header = () => {
               {!isOpen && <GiHamburgerMenu />}
             </div>
             <div className="group relative flex items-center">
-              <img
-                onClick={() => setProfileOpen(!isProfileOpen)}
-                src={
-                  user?.photoURL ||
-                  `https://api.dicebear.com/9.x/initials/svg?seed=${user?.displayName}`
-                }
-                alt={user?.displayName || "User Avatar"}
-                className="hidden h-14 w-14 rounded-full border-2 border-gray-300 shadow-md transition-all duration-300 hover:scale-105 xl:block"
-              />
+              <Link href="/profile">
+                <img
+                  src={
+                    user?.photoURL ||
+                    `https://api.dicebear.com/9.x/initials/svg?seed=${user?.displayName}`
+                  }
+                  alt={user?.displayName || "User Avatar"}
+                  className="hidden h-14 w-14 rounded-full border-2 border-gray-300 shadow-md transition-all duration-300 hover:scale-105 xl:block"
+                />
+              </Link>
 
-              <div
-                className={`absolute top-16 right-0 w-74 flex-col gap-3 rounded-lg border border-gray-200 bg-white p-4 shadow-xl ${isProfileOpen ? "flex" : "hidden"} dark:border-gray-700 dark:bg-gray-900`}
-              >
+              <div className="invisible absolute top-16 right-0 w-80 flex-col gap-3 rounded-lg border border-gray-200 bg-white p-4 opacity-0 shadow-xl transition-all duration-300 ease-in group-hover:visible group-hover:opacity-100 dark:border-gray-700 dark:bg-gray-900">
                 <h4 className="text-sm font-semibold text-gray-800 dark:text-white">
                   Name:{" "}
                   <span className="font-normal">
@@ -135,9 +110,6 @@ const Header = () => {
                   Email:{" "}
                   <span className="font-normal">{user?.email || "N/A"}</span>
                 </h3>
-                <button onClick={signOutUser} className="text-start">
-                  Logout
-                </button>
               </div>
             </div>
 
@@ -152,7 +124,6 @@ const Header = () => {
                 <MdOutlinePlaylistRemove onClick={() => setOpen(false)} />
               </div>
               <img
-                onClick={() => setProfileOpen(!isProfileOpen)}
                 src={
                   user?.photoURL ||
                   `https://api.dicebear.com/9.x/initials/svg?seed=${user?.displayName}`
