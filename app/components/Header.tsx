@@ -76,7 +76,7 @@ const Header = () => {
             <button
               onClick={() => dispatch(toggleDarkMode())}
               title={`Toggle to ${darkMode ? "Light" : "Dark"} Mode`}
-              className="p-2 text-xl transition-all hover:scale-110"
+              className="p-2 text-xl transition-all scale-180 hover:scale-150"
             >
               {darkMode ? (
                 <WiMoonAltWaningGibbous2 />

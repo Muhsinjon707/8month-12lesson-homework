@@ -16,13 +16,13 @@ import { closeImageModal, openImageModal } from "../store/slice/modalSlice";
 
 // Redux store config..
 import { RootState } from "../store/store";
+import { useCollection } from "../hooks/useCollection";
 
-interface DownloadsProps {
-  images: UnsplashPhoto[];
-}
-
-const DownloadsList = ({ images }: DownloadsProps) => {
+const DownloadsList = () => {
   const dispatch = useDispatch();
+
+  // Cloud store
+  const {data: images} = useCollection("downloads");
 
   // Modals configs.
   const { imageModal } = useSelector((state: RootState) => state.modal);
@@ -43,7 +43,7 @@ const DownloadsList = ({ images }: DownloadsProps) => {
             key={img.id}
             onClick={() => dispatch(openImageModal(img))}
             className={`
-                w-[32%] shadow-lg hover:shadow-xl min-h-[420px] 
+                w-[32%] shadow-lg hover:shadow-xl max-h-[420px] 
                 rounded-lg p-4 flex flex-col items-start justify-start gap-2  
                 ${darkMode ? "bg-[#473e5a] shadow-0" : "bg-white shadow-gray-400"}
             `}
@@ -54,9 +54,9 @@ const DownloadsList = ({ images }: DownloadsProps) => {
               alt={img.alt_description}
               title={img.alt_description}
             />
-            <div className="min-h-[180px] flex flex-col items-start justify-between gap-1">
+            <div className="flex flex-col items-start justify-between gap-1">
               <div>
-                <div className="flex items-center gap-3 min-h-[50px]">
+                <div className="flex items-center gap-3">
                   <img
                     className="rounded-full"
                     src={img.user.profile_image.small}
@@ -74,7 +74,7 @@ const DownloadsList = ({ images }: DownloadsProps) => {
                     </p>
                   </div>
                 </div>
-                <p className="font-semibold">{img.description}</p>
+                <p className="font-semibold truncate w-80">{img.description}</p>
               </div>
               <h4 className="bg-gray-500 px-2 text-white mt-2 rounded-full">
                 {img.asset_type}

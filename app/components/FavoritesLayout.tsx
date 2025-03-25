@@ -2,6 +2,7 @@ import React from "react";
 
 // React icons
 import { FaPlus } from "react-icons/fa";
+import { FaHeart } from "react-icons/fa";
 import { HiArrowNarrowDown } from "react-icons/hi";
 
 // Structure validation
@@ -28,29 +29,49 @@ import { RootState } from "../store/store";
 import ImageModal from "./ImageModal";
 import CollectionModal from "./CollectionModal";
 
-// interface
-interface ImageLayoutProps {
-  images: UnsplashPhoto[];
-}
+// Cloud store
+import { useCollection } from "../hooks/useCollection";
+import { useFirestore } from "../hooks/useFirestore";
 
-const FavoritesLayout: React.FC<ImageLayoutProps> = ({ images }) => {
+
+const FavoritesLayout = () => {
   const dispatch = useDispatch();
 
+  // Handling downlaods storage
+  const { addDocumentToDownloads, deleteDocumentFromDownloads } = useFirestore();
+
   // Downloads List
-  const downloadsList = useSelector(
-    (state: RootState) => state.downloads.downloadsList,
-  );
+  const {data: downloadsList} = useCollection("downlaods");
 
   // Check if image is in downloads
   const isInDownloads = (imageId: string) =>
     downloadsList.some((item) => item.id === imageId);
 
+
   // Handle Add/Remove from Downloads
   function handleAddToDownloads(image: UnsplashPhoto) {
-    if (isInDownloads(image.id)) {
-      dispatch(removeFromDownloads(image.id));
+    if (!isInDownloads(image.id)) {
+      addDocumentToDownloads("downloads", image.id, image);
     } else {
-      dispatch(addToDownloads(image));
+      deleteDocumentFromDownloads("downlaods", image.id);
+    }
+  }
+
+  const {data: favoritesList} = useCollection("favorites");
+
+  // Handling favorites storage
+  const { addDocumentToFavorites, deleteDocumentFromFavorites } = useFirestore();
+
+  // Check if image is in favorites
+  const isFavorite = (imageId: string) =>
+    favoritesList.some((item) => item.id === imageId);
+
+  // Handle Add/Remove from Favorites
+  function handleAddToFavorites(image: UnsplashPhoto) {
+    if (!isFavorite(image.id)) {
+      addDocumentToFavorites("favorites", image.id, image);
+    } else {
+      deleteDocumentFromFavorites("favorites", image.id);
     }
   }
 
@@ -58,6 +79,9 @@ const FavoritesLayout: React.FC<ImageLayoutProps> = ({ images }) => {
   const { imageModal, collectionModal } = useSelector(
     (state: RootState) => state.modal,
   );
+
+  // Cloud store
+  const { data: images } = useCollection("favorites");
 
   return (
     <>
@@ -78,6 +102,17 @@ const FavoritesLayout: React.FC<ImageLayoutProps> = ({ images }) => {
                 <div className="duraction-300 invisible absolute top-0 left-0 flex w-full items-center justify-between px-3 py-2 opacity-0 transition-all group-hover:visible group-hover:opacity-100">
                   <span>{image.promoted_at && "Promoted"}</span>
                   <div className="flex items-center gap-1">
+                    <button
+                      onClick={() => handleAddToFavorites(image)}
+                      className={`cursor-pointer rounded-lg border border-gray-300 px-[12px] py-2 text-sm opacity-50 shadow-sm transition duration-100 hover:border-gray-400 hover:opacity-65 ${
+                        isFavorite(image.id)
+                          ? "bg-red-500 text-white"
+                          : "bg-white text-black"
+                      } `}
+                      title="Like this image"
+                    >
+                      <FaHeart />
+                    </button>
                     <button
                       onClick={() => dispatch(openCollectionModal(image))}
                       className="cursor-pointer rounded-lg border border-gray-300 bg-white px-[12px] py-2 text-sm text-black opacity-50 shadow-sm transition duration-300 hover:border-gray-400 hover:opacity-65"

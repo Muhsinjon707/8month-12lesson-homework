@@ -26,6 +26,8 @@ import {
   addToFavorites,
   removeFromFavorites,
 } from "../store/slice/favoritesSlice";
+import { useFirestore } from "../hooks/useFirestore";
+import { useCollection } from "../hooks/useCollection";
 
 // Date formatting function
 const formatDate = (isoDate?: string) => {
@@ -46,23 +48,23 @@ const ImageModal: React.FC = () => {
   );
 
   // Favorites config.
-  const favoritesList = useSelector(
-    (state: RootState) => state.liked.likedImages
-  );
-
-  // Check if image is in favorites
-  const isFavorite = (imageId: string) =>
-    favoritesList.some((item) => item.id === imageId);
-
-  // Handle Add/Remove from Favorites
-  function handleAddToFavorites(image: UnsplashPhoto) {
-    if (isFavorite(image.id)) {
-      dispatch(removeFromFavorites(image.id));
-    } else {
-      dispatch(addToFavorites(image));
-    }
-  }
-
+   const { data: favoritesList } = useCollection("favorites");
+ 
+   // Check if image is in favorites
+   const isFavorite = (imageId: string) =>
+     favoritesList.some((item) => item.id === imageId);
+ 
+   const { addDocumentToFavorites, deleteDocumentFromFavorites } =
+     useFirestore();
+ 
+   // Handle Add/Remove from Favorites
+   function handleAddToFavorites(image: UnsplashPhoto) {
+     if (!isFavorite(image.id)) {
+       addDocumentToFavorites("favorites", image.id, image);
+     } else {
+       deleteDocumentFromFavorites("favorites", image.id);
+     }
+   }
   if (!isOpen || !imageData) return null;
 
   return (

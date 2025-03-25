@@ -30,7 +30,7 @@ const CollectionModal: React.FC = () => {
 
   // Modal States
   const { isOpen, imageData } = useSelector(
-    (state: RootState) => state.modal.collectionModal
+    (state: RootState) => state.modal.collectionModal,
   );
 
   const [showRightModal, setShowRightModal] = useState(false);
@@ -43,10 +43,10 @@ const CollectionModal: React.FC = () => {
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.3 }}
-      className="fixed inset-0 bg-black/50 backdrop-grayscale-50 flex justify-center items-center z-50"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-grayscale-50"
     >
       <button
-        className="absolute top-5 right-5 text-white text-3xl cursor-pointer"
+        className="absolute top-5 right-5 cursor-pointer text-3xl text-white"
         onClick={() => {
           dispatch(closeCollectionModal());
           setShowRightModal(false);
@@ -60,18 +60,16 @@ const CollectionModal: React.FC = () => {
         animate={{ y: 0, opacity: 1, scale: 1 }}
         exit={{ y: 50, opacity: 0, scale: 0.95 }}
         transition={{ duration: 0.4, ease: "easeInOut" }}
-        className="
-          relative bg-white w-[55%] min-h-[65%] rounded-lg shadow-lg max-w-7xl 
-          flex items-start justify-start gap-3 overflow-hidden 
-        "
+        className="relative flex min-h-[65%] w-[55%] max-w-7xl items-start justify-start gap-3 overflow-hidden rounded-lg bg-white shadow-lg"
       >
         <motion.div
-          initial={{x: -30, opacity: 0}}
-          animate={{x: 0, opacity: 1}}
-          transition={{delay: 0.2, duration: 0.3}}
-          className="w-[40%] bg-[#fdfdc6] p-6 rounded-l-lg h-full">
+          initial={{ x: -30, opacity: 0 }}
+          animate={{ x: 0, opacity: 1 }}
+          transition={{ delay: 0.2, duration: 0.3 }}
+          className="h-full w-[40%] rounded-l-lg bg-[#fdfdc6] p-6"
+        >
           <Image
-            className="w-[500px] h-[500px] object-cover"
+            className="h-[500px] w-[500px] object-cover"
             src="/collection-image-removebg-preview.png"
             width={600}
             height={100}

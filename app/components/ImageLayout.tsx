@@ -16,10 +16,6 @@ import { useSelector, useDispatch } from "react-redux";
 
 // Redux Modal
 import {
-  addToFavorites,
-  removeFromFavorites,
-} from "../store/slice/favoritesSlice";
-import {
   closeCollectionModal,
   closeImageModal,
   openCollectionModal,
@@ -41,6 +37,10 @@ import {
 } from "../store/slice/downloadsSlice";
 import { closeWindow } from "../store/slice/burgerMenuSlice";
 
+// useFirestore
+import { useFirestore } from "../hooks/useFirestore";
+import { useCollection } from "../hooks/useCollection";
+
 interface ImageLayoutProps {
   images: UnsplashPhoto[];
 }
@@ -50,42 +50,48 @@ const ImageLayout: React.FC<ImageLayoutProps> = ({ images }) => {
 
   // Modals configs.
   const { imageModal, collectionModal } = useSelector(
-    (state: RootState) => state.modal
+    (state: RootState) => state.modal,
   );
 
+  // =======================================================================
+
   // Favorites config.
-  const favoritesList = useSelector(
-    (state: RootState) => state.liked.likedImages
-  );
+  const { data: favoritesList } = useCollection("favorites");
 
   // Check if image is in favorites
   const isFavorite = (imageId: string) =>
     favoritesList.some((item) => item.id === imageId);
 
+  const { addDocumentToFavorites, deleteDocumentFromFavorites } =
+    useFirestore();
+
   // Handle Add/Remove from Favorites
   function handleAddToFavorites(image: UnsplashPhoto) {
-    if (isFavorite(image.id)) {
-      dispatch(removeFromFavorites(image.id));
+    if (!isFavorite(image.id)) {
+      addDocumentToFavorites("favorites", image.id, image);
     } else {
-      dispatch(addToFavorites(image));
+      deleteDocumentFromFavorites("favorites", image.id);
     }
   }
 
+  // =========================================================================
+
   // Downloads List
-  const downloadsList = useSelector(
-    (state: RootState) => state.downloads.downloadsList
-  );
+  const { data: downloadsList } = useCollection("downloads");
 
   // Check if image is in downloads
   const isInDownloads = (imageId: string) =>
     downloadsList.some((item) => item.id === imageId);
 
+  const { addDocumentToDownloads, deleteDocumentFromDownloads } =
+  useFirestore();
+
   // Handle Add/Remove from Downloads
   function handleAddToDownloads(image: UnsplashPhoto) {
-    if (isInDownloads(image.id)) {
-      dispatch(removeFromDownloads(image.id));
+    if (!isInDownloads(image.id)) {
+      addDocumentToDownloads("downloads", image.id, image);
     } else {
-      dispatch(addToDownloads(image));
+      deleteDocumentFromDownloads("downloads", image.id);
     }
   }
 
@@ -102,42 +108,29 @@ const ImageLayout: React.FC<ImageLayoutProps> = ({ images }) => {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, ease: "easeInOut" }}
                 key={image.id}
-                className="relative group text-white"
+                className="group relative text-white"
                 onClick={(e) => {
-                  e.stopPropagation()
-                  dispatch(closeWindow())
+                  e.stopPropagation();
+                  dispatch(closeWindow());
                 }}
               >
-                <div
-                  className="
-                    invisible opacity-0 group-hover:visible group-hover:opacity-100 transition-all duraction-300
-                    absolute top-0 left-0 px-3 py-2 w-full flex items-center justify-between
-                   "
-                >
+                <div className="duraction-300 invisible absolute top-0 left-0 flex w-full items-center justify-between px-3 py-2 opacity-0 transition-all group-hover:visible group-hover:opacity-100">
                   <span>{image.promoted_at && "Promoted"}</span>
                   <div className="flex items-center gap-1">
                     <button
                       onClick={() => handleAddToFavorites(image)}
-                      className={` 
-                        border border-gray-300 cursor-pointer py-2 px-[12px] rounded-lg shadow-sm text-sm 
-                        hover:border-gray-400 transition duration-100 opacity-50 hover:opacity-65 
-                        ${
-                          isFavorite(image.id)
-                            ? "bg-red-500 text-white"
-                            : "bg-white text-black"
-                        }  
-                      `}
+                      className={`cursor-pointer rounded-lg border border-gray-300 px-[12px] py-2 text-sm opacity-50 shadow-sm transition duration-100 hover:border-gray-400 hover:opacity-65 ${
+                        isFavorite(image.id)
+                          ? "bg-red-500 text-white"
+                          : "bg-white text-black"
+                      } `}
                       title="Like this image"
                     >
                       <FaHeart />
                     </button>
                     <button
                       onClick={() => dispatch(openCollectionModal(image))}
-                      className="
-                        bg-white border border-gray-300 cursor-pointer py-2 px-[12px] rounded-lg shadow-sm
-                        hover:border-gray-400 transition duration-300 opacity-50 hover:opacity-65 text-black 
-                        text-sm
-                      "
+                      className="cursor-pointer rounded-lg border border-gray-300 bg-white px-[12px] py-2 text-sm text-black opacity-50 shadow-sm transition duration-300 hover:border-gray-400 hover:opacity-65"
                       title="Add to a collection"
                     >
                       <FaPlus />
@@ -157,15 +150,10 @@ const ImageLayout: React.FC<ImageLayoutProps> = ({ images }) => {
                   }}
                   onClick={() => dispatch(openImageModal(image))}
                 />
-                <div
-                  className="
-                      invisible opacity-0 group-hover:visible group-hover:opacity-100 transition-all duraction-300
-                      w-full absolute px-2 py-2 bottom-0 flex items-center justify-between
-                    "
-                >
-                  <div className="flex gap-2 items-center">
+                <div className="duraction-300 invisible absolute bottom-0 flex w-full items-center justify-between px-2 py-2 opacity-0 transition-all group-hover:visible group-hover:opacity-100">
+                  <div className="flex items-center gap-2">
                     <img
-                      className="rounded-full w-[40px] h-[40px] shrink-0"
+                      className="h-[40px] w-[40px] shrink-0 rounded-full"
                       src={
                         image.user?.profile_image?.small ??
                         "/default-avatar.png"
@@ -186,11 +174,7 @@ const ImageLayout: React.FC<ImageLayoutProps> = ({ images }) => {
                     </div>
                   </div>
                   <span
-                    className="
-                        bg-white border border-gray-300 cursor-pointer py-2 px-[12px] rounded-lg shadow-sm
-                        hover:border-gray-400 transition duration-300 opacity-50 hover:opacity-65 text-black 
-                        text-sm
-                      "
+                    className="cursor-pointer rounded-lg border border-gray-300 bg-white px-[12px] py-2 text-sm text-black opacity-50 shadow-sm transition duration-300 hover:border-gray-400 hover:opacity-65"
                     title="Add to a collection"
                   >
                     <a

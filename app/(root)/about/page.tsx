@@ -1,35 +1,9 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
-
-// Cloud Store
-import { db } from "@/app/firebase/firebaseConfig";
-
-import { collection, getDocs } from "firebase/firestore";
-import { div } from "framer-motion/m";
-
-async function fetchDataFromFirestore() {
-  const querySnapshot = await getDocs(collection(db, "favorites"));
-
-  const data: any[] = [];
-  querySnapshot.forEach((doc) => {
-    data.push({ id: doc.id, ...doc.data() });
-  });
-
-  return data;
-}
+import { useCollection } from "@/app/hooks/useCollection";
 
 const About = () => {
-  const [userData, setUserData] = useState<any[] | []>([]);
-
-  useEffect(() => {
-    async function fetchData() {
-      const data = await fetchDataFromFirestore();
-      setUserData(data);
-    }
-
-    fetchData();
-  }, []);
+  const {data: userData} = useCollection("favorites");
 
   return (
     <div className="mt-20 min-h-screen">
