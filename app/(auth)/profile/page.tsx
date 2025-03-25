@@ -30,6 +30,7 @@ import { signOut } from "firebase/auth";
 
 // Toastify
 import { toast } from "react-toastify";
+import Link from "next/link";
 
 const Profile = () => {
   const dispatch = useDispatch();
@@ -66,13 +67,16 @@ const Profile = () => {
 
   const darkMode = useSelector((state: RootState) => state.darkMode.darkMode);
 
+  const [isThemeOpen, setThemeOpen] = useState(false);
+  const [isLangOpen, setLangOpen] = useState(false);
+
   return (
     <div
-      className={`min-h-screen w-full ${darkMode ? "bg-[#292b30]" : "bg-[#05768e]"} pt-10`}
+      className={`flex h-screen w-full items-center justify-center overflow-hidden ${darkMode ? "bg-[#292b30]" : "bg-[#05768e]"}`}
     >
-      <div className="absolute top-1/2 left-1/2 container flex max-w-4xl -translate-1/2 items-center justify-center">
-        <div className="flex w-full items-start justify-between gap-16">
-          <div className="flex flex-col items-start gap-20">
+      <div className="container mx-auto max-w-4xl">
+        <div className="flex w-full flex-col items-center justify-center gap-10 md:items-start lg:flex-row lg:justify-between lg:gap-16">
+          <div className="flex flex-col items-start gap-10 md:flex-row md:gap-20 md:self-center lg:flex-col">
             <div className="h-[330px] w-[308px] rounded-xl bg-white px-3 py-4">
               <div className="flex items-center justify-center gap-4 border-b border-gray-400 pb-4">
                 <img
@@ -81,7 +85,7 @@ const Profile = () => {
                     `https://api.dicebear.com/9.x/initials/svg?seed=${user?.displayName}`
                   }
                   alt={user?.displayName || "User Avatar"}
-                  className="hidden h-14 w-14 rounded-full border-2 border-gray-200 shadow-md transition-all duration-300 hover:scale-105 xl:block"
+                  className="h-14 w-14 rounded-full border-2 border-gray-200 shadow-md transition-all duration-300 hover:scale-105"
                 />
                 <div>
                   <h3 className="text-lg">{user?.displayName}</h3>
@@ -135,20 +139,28 @@ const Profile = () => {
                   <h4>Theme</h4>
                   <div className="flex items-center gap-2">
                     <h4>{darkMode ? "Dark" : "Light"}</h4>
-                    <div className="group relative">
-                      <span>
+                    <div className="relative">
+                      <span onClick={() => setThemeOpen(!isThemeOpen)}>
                         <IoIosArrowDown />
                       </span>
-                      <ul className="backdrop-blue-lg invisible absolute top-5 right-0 h-20 w-20 flex-col overflow-hidden rounded-md bg-white/50 opacity-0 shadow transition-all delay-200 duration-300 ease-linear group-hover:visible group-hover:opacity-100">
+                      <ul
+                        className={`absolute top-5 right-0 h-20 w-20 flex-col overflow-hidden rounded-md bg-white z-10 shadow transition-all delay-200 duration-75 ease-linear ${isThemeOpen ? "visible opacity-100" : "invisible opacity-0"} `}
+                      >
                         <li
-                          onClick={() => dispatch(setLightMode())}
-                          className="px-3 py-2 hover:bg-gray-200"
+                          onClick={() => {
+                            dispatch(setLightMode());
+                            setThemeOpen(false);
+                          }}
+                          className="cursor-pointer px-3 py-2 hover:bg-gray-200"
                         >
                           Light
                         </li>
                         <li
-                          onClick={() => dispatch(setDarkMode())}
-                          className="px-3 py-2 hover:bg-gray-200"
+                          onClick={() => {
+                            dispatch(setDarkMode());
+                            setThemeOpen(false);
+                          }}
+                          className="cursor-pointer px-3 py-2 hover:bg-gray-200"
                         >
                           Dark
                         </li>
@@ -160,11 +172,13 @@ const Profile = () => {
                   <h4>Language</h4>
                   <div className="flex items-center gap-2">
                     <h4>Eng</h4>
-                    <div className="group relative">
-                      <span>
+                    <div className="relative">
+                      <span onClick={() => setLangOpen(!isLangOpen)}>
                         <IoIosArrowDown />
                       </span>
-                      <ul className="invisible absolute top-5 right-0 h-30 w-30 flex-col overflow-hidden rounded-md bg-white opacity-0 shadow transition-all delay-200 duration-300 ease-linear group-hover:visible group-hover:opacity-100">
+                      <ul
+                        className={`absolute top-5 right-0 h-30 w-30 flex-col overflow-hidden rounded-md bg-white shadow transition-all delay-200 duration-75 ease-linear ${isLangOpen ? "visible opacity-100" : "invisible opacity-0"} `}
+                      >
                         <li className="px-3 py-2 hover:bg-gray-200">Eng</li>
                         <li className="px-3 py-2 hover:bg-gray-200">Rus</li>
                         <li className="px-3 py-2 hover:bg-gray-200">Uzb</li>
@@ -175,7 +189,7 @@ const Profile = () => {
               </ul>
             </div>
           </div>
-          <div className="flex h-[516px] w-[550px] flex-col items-start justify-between rounded-xl bg-white p-10">
+          <div className="flex h-[516px] w-[90%] max-w-[550px] flex-col items-start self-center rounded-xl bg-white p-10 md:justify-between lg:self-start">
             <div className="w-full">
               <div className="flex h-20 w-full items-start justify-between border-b border-gray-200">
                 <div className="flex items-center justify-center gap-4">
@@ -186,7 +200,7 @@ const Profile = () => {
                         `https://api.dicebear.com/9.x/initials/svg?seed=${user?.displayName}`
                       }
                       alt={user?.displayName || "User Avatar"}
-                      className="hidden h-16 w-16 rounded-full border-2 border-gray-300 shadow-md transition-all duration-300 hover:scale-105 xl:block"
+                      className="h-16 w-16 rounded-full border-2 border-gray-300 shadow-md transition-all duration-300 hover:scale-105"
                     />
                     {doUpdateProfile && (
                       <span
@@ -199,7 +213,9 @@ const Profile = () => {
                   </div>
                   <div>
                     <h3 className="">{user?.displayName}</h3>
-                    <p className="w-40 text-[#6B7280]">{user?.email}</p>
+                    <p className="w-40 overflow-hidden whitespace-normal text-[#6B7280] sm:overflow-visible">
+                      {user?.email}
+                    </p>
                   </div>
                 </div>
                 <div>
@@ -246,9 +262,12 @@ const Profile = () => {
               >
                 {doUpdateProfile ? "Save changes" : "Update Profile"}
               </button>
-              <button className="grow rounded-md bg-red-500 px-5 py-2 font-bold text-white">
+              <Link
+                href="/"
+                className="grow rounded-md bg-red-500 px-5 py-2 text-center font-bold text-white"
+              >
                 Home page
-              </button>
+              </Link>
             </div>
           </div>
         </div>
