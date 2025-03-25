@@ -89,7 +89,7 @@ const ImageLayout: React.FC<ImageLayoutProps> = ({ images }) => {
   }
 
   return (
-    <div className="w-full">
+    <div className="w-full" onClick={() => dispatch(closeCollectionModal())}>
       <ResponsiveMasonry
         columnsCountBreakPoints={{ 500: 1, 640: 2, 750: 3, 1024: 4 }}
       >
@@ -102,6 +102,7 @@ const ImageLayout: React.FC<ImageLayoutProps> = ({ images }) => {
                 transition={{ duration: 0.5, ease: "easeInOut" }}
                 key={image.id}
                 className="relative group text-white"
+                onClick={(e) => e.stopPropagation()}
               >
                 <div
                   className="

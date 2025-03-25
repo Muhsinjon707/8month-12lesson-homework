@@ -30,9 +30,10 @@ import { toggleDarkMode } from "../store/slice/darkModeSlice";
 
 // Redux store config..
 import { RootState } from "../store/store";
+import { closeWindow, openWindow } from "../store/slice/burgerMenuSlice";
 
 const Header = () => {
-  const [isOpen, setOpen] = useState(false);
+  const isOpen = useSelector((state: RootState) => state.burgerMenu.isOpen);
 
   const darkMode = useSelector((state: RootState) => state.darkMode.darkMode);
 
@@ -42,7 +43,8 @@ const Header = () => {
 
   return (
     <header
-      className={` ${darkMode ? "bg-[#292434] text-white" : "bg-white text-black"} fixed top-0 right-0 left-0 z-50 mx-auto px-16 py-3 shadow-lg`}
+      onClick={() => dispatch(closeWindow())}
+      className={`${darkMode ? "bg-[#292434] text-white" : "bg-white text-black"} fixed top-0 right-0 left-0 z-50 mx-auto px-16 py-3 shadow-lg`}
     >
       <nav className="xs:gap-10 xs:flex-row flex w-full flex-col items-center justify-between gap-2 sm:flex-col sm:gap-3 md:gap-4 xl:flex-row">
         <Link
@@ -82,7 +84,10 @@ const Header = () => {
               )}
             </button>
             <div
-              onClick={() => setOpen(true)}
+              onClick={(e) => {
+                e.stopPropagation()
+                dispatch(openWindow())
+              }}
               className="mx-2 scale-200 cursor-pointer"
             >
               {!isOpen && <GiHamburgerMenu />}
@@ -114,6 +119,7 @@ const Header = () => {
             </div>
 
             <ul
+              onClick={(e) => e.stopPropagation()}
               className={` ${
                 isOpen
                   ? "visible bg-white/30 opacity-100 backdrop-blur-md"
@@ -121,7 +127,7 @@ const Header = () => {
               } absolute top-0 right-0 flex min-h-screen w-[350px] flex-col items-start gap-3 rounded-l-xl p-6 shadow-lg transition-all duration-300 ease-in-out`}
             >
               <div className="absolute top-4 right-4 scale-180 cursor-pointer">
-                <MdOutlinePlaylistRemove onClick={() => setOpen(false)} />
+                <MdOutlinePlaylistRemove onClick={() => dispatch(closeWindow())} />
               </div>
               <img
                 src={

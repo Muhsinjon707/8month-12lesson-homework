@@ -8,6 +8,7 @@ import searchReducer from "./slice/searchSlice";
 import downloadsReducer from "./slice/downloadsSlice";
 import darkModeReducer from "./slice/darkModeSlice";
 import loginReducer from "./slice/loginSlice";
+import burgerMenuReducer from "./slice/burgerMenuSlice";
 
 export const store = () => {
   return configureStore({
@@ -19,6 +20,7 @@ export const store = () => {
       downloads: downloadsReducer,
       darkMode: darkModeReducer,
       login: loginReducer,
+      burgerMenu: burgerMenuReducer,
     },
   });
 };
