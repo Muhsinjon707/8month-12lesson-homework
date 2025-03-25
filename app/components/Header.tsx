@@ -32,6 +32,7 @@ import { toggleDarkMode } from "../store/slice/darkModeSlice";
 // Redux store config..
 import { RootState } from "../store/store";
 import { closeWindow, openWindow } from "../store/slice/burgerMenuSlice";
+import { useCollection } from "../hooks/useCollection";
 
 const Header = () => {
   const isOpen = useSelector((state: RootState) => state.burgerMenu.isOpen);
@@ -41,6 +42,13 @@ const Header = () => {
   const dispatch = useDispatch();
 
   const user = useSelector((state: RootState) => state.login.user);
+
+  const collections = useSelector(
+    (state: RootState) => state.collections.collections,
+  );
+
+  const { data: downloads } = useCollection("downloads");
+  const { data: favorites } = useCollection("favorites");
 
   return (
     <header
@@ -76,7 +84,7 @@ const Header = () => {
             <button
               onClick={() => dispatch(toggleDarkMode())}
               title={`Toggle to ${darkMode ? "Light" : "Dark"} Mode`}
-              className="p-2 text-xl transition-all scale-180 hover:scale-150"
+              className="scale-180 p-2 text-xl transition-all hover:scale-150"
             >
               {darkMode ? (
                 <WiMoonAltWaningGibbous2 />
@@ -86,8 +94,8 @@ const Header = () => {
             </button>
             <div
               onClick={(e) => {
-                e.stopPropagation()
-                dispatch(openWindow())
+                e.stopPropagation();
+                dispatch(openWindow());
               }}
               className="mx-2 scale-200 cursor-pointer"
             >
@@ -128,7 +136,9 @@ const Header = () => {
               } absolute top-0 right-0 flex min-h-screen w-[350px] flex-col items-start gap-3 rounded-l-xl p-6 shadow-lg transition-all duration-300 ease-in-out`}
             >
               <div className="absolute top-4 right-4 scale-180 cursor-pointer">
-                <MdOutlinePlaylistRemove onClick={() => dispatch(closeWindow())} />
+                <MdOutlinePlaylistRemove
+                  onClick={() => dispatch(closeWindow())}
+                />
               </div>
               <img
                 src={
@@ -154,9 +164,12 @@ const Header = () => {
                   href="/collections"
                   className="flex w-full items-center justify-between rounded-lg bg-white p-3 text-lg font-medium text-black transition-all duration-200 hover:bg-gray-300 hover:text-white"
                 >
-                  Collections
-                  <span>
+                  <h3>Collections</h3>
+                  <span className="relative">
                     <BsFillCollectionFill />
+                    <span className="absolute -top-5 -right-6 rounded-full bg-green-600 px-2 text-white">
+                      {collections.length}
+                    </span>
                   </span>
                 </Link>
               </li>
@@ -165,9 +178,12 @@ const Header = () => {
                   href="/downloads"
                   className="flex w-full items-center justify-between rounded-lg bg-white p-3 text-lg font-medium text-black transition-all duration-200 hover:bg-gray-300 hover:text-white"
                 >
-                  Downloads
-                  <span>
+                  <h3>Downloads</h3>
+                  <span className="relative">
                     <FaDownload />
+                    <span className="absolute -top-5 -right-6 rounded-full bg-blue-600 px-2 text-white">
+                      {downloads.length}
+                    </span>
                   </span>
                 </Link>
               </li>
@@ -176,9 +192,12 @@ const Header = () => {
                   href="/favorites"
                   className="flex w-full items-center justify-between rounded-lg bg-white p-3 text-lg font-medium text-black transition-all duration-200 hover:bg-gray-300 hover:text-white"
                 >
-                  Favorites
-                  <span>
+                  <h3>Favorites</h3>
+                  <span className="relative">
                     <MdFavorite />
+                    <span className="absolute -top-5 -right-6 rounded-full bg-red-600 px-2 text-white">
+                      {favorites.length}
+                    </span>
                   </span>
                 </Link>
               </li>
