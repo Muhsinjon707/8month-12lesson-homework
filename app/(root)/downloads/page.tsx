@@ -18,7 +18,7 @@ const Downlaods = () => {
 
   return (
     <div className="container max-w-6xl mx-auto mt-24 min-h-screen">
-      <h2 className={`text-2xl font-extrabold ${darkMode == "dark" ? "text-black" : "text-white"}`}>Downloads List</h2>
+      <h2 className={`text-2xl font-extrabold ${darkMode ? "text-black" : "text-white"}`}>Downloads List</h2>
       {downloadsList.length > 0 ? (
         <DownloadsList images={downloadsList} />
       ) : (

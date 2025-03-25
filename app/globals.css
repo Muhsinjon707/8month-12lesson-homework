@@ -94,3 +94,14 @@ input[type="checkbox"]:checked::after {
   font-weight: bold;
   position: absolute;
 }
+
+.hide-scrollbar {
+  overflow: auto;
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* Internet Explorer/Edge */
+}
+
+/* Hide scrollbar for WebKit browsers */
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}

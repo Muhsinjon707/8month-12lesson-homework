@@ -27,7 +27,7 @@ const Products = () => {
   const [pageParam, setPageParam] = useState(1);
 
   const searchQuery = useSelector(
-    (state: RootState) => state.search.searchQuery
+    (state: RootState) => state.search.searchQuery,
   );
   const prevSearchParams = useRef(searchQuery);
 
@@ -40,7 +40,7 @@ const Products = () => {
   const { data, isPending, isError } = useFetch<UnsplashResponse>(
     `https://api.unsplash.com/search/photos?client_id=${ACCESS_KEY}&query=${
       debouncedQuery || "all"
-    }&page=${pageParam}&per_page=20`
+    }&page=${pageParam}&per_page=20`,
   );
 
   useEffect(() => {
@@ -50,7 +50,7 @@ const Products = () => {
           pageParam === 1 ? data.results : [...prev, ...data.results];
 
         return Array.from(new Set(newImages.map((img) => img.id))).map(
-          (id) => newImages.find((img) => img.id === id)!
+          (id) => newImages.find((img) => img.id === id)!,
         );
       });
     }
@@ -66,7 +66,7 @@ const Products = () => {
 
   return (
     <div className="mt-24 flex flex-col items-center">
-      {isPending && <p>Loading...</p>}
+      {isPending && <div>Loading...</div>}
       {isError && (
         <p className="text-red-500">
           Failed to fetch images. Please try again later.
@@ -81,13 +81,7 @@ const Products = () => {
       {!isPending && (
         <button
           onClick={() => setPageParam(pageParam + 1)}
-          className={`
-             border border-gray-300 
-            hover:bg-gray-200 hover:border-gray-500 transition duration-200
-            shadow-md rounded-lg py-2 px-4 my-5  
-
-            ${darkMode == "dark" ? "bg-violet-200 text-gray-800" : "bg-blue-500 text-white"}
-          `}
+          className={`my-5 rounded-lg border border-gray-300 px-4 py-2 shadow-md transition duration-200 hover:border-gray-500 hover:bg-gray-200 ${darkMode ? "bg-violet-200 text-gray-800" : "bg-blue-500 text-white"} `}
         >
           Load more
         </button>

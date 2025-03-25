@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 
 interface RoutesProps {
   children: React.ReactNode;
-  user: boolean; // ✅ This now correctly gets `isAuthenticated`
+  user: boolean; 
 }
 
 const ProtectedRoutes = ({ children, user }: RoutesProps) => {

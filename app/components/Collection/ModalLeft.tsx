@@ -28,7 +28,7 @@ const ModalLeft: React.FC<ModalLeftProps> = ({
   onCreateNewCollection,
 }) => {
   const collections = useSelector(
-    (state: RootState) => state.collections.collections
+    (state: RootState) => state.collections.collections,
   );
   const dispatch = useDispatch();
 
@@ -40,33 +40,32 @@ const ModalLeft: React.FC<ModalLeftProps> = ({
         removeImageFromCollection({
           collectionId: collection.id,
           imageId: imageData.id,
-        })
+        }),
       );
     } else {
       dispatch(
-        addImageToCollection({ collectionId: collection.id, image: imageData })
+        addImageToCollection({ collectionId: collection.id, image: imageData }),
       );
     }
   }
 
   return (
     <div className="w-[60%] px-6 py-7">
-      <h2 className="font-bold text-2xl">Add to Collection</h2>
+      <h2 className="text-2xl font-bold">Add to Collection</h2>
 
-      <div className="w-full mt-8 flex flex-col items-start gap-3">
+      <div className="mt-8 flex w-full flex-col items-start gap-3">
         <div
           onClick={onCreateNewCollection}
-          className="
-            w-full bg-gray-200 text-gray-600 border-2 border-dashed 
-            rounded-md py-6 px-4 opacity-80 hover:opacity-100 cursor-pointer transition
-          "
+          className="w-full cursor-pointer rounded-md border-2 border-dashed bg-gray-200 px-4 py-6 text-gray-600 opacity-80 transition hover:opacity-100"
         >
-          <button className="text-xl font-bold text-black cursor-pointer">
+          <button className="cursor-pointer text-xl font-bold text-black">
             Create a new collection
           </button>
         </div>
 
-        <div className="w-full">
+        <div
+          className={`hide-scrollbar flex h-[330px] w-full flex-col items-start gap-1 overflow-y-auto`}
+        >
           {collections.length > 0 ? (
             collections.map((c) => {
               const exists = c.images.some((img) => img.id === imageData.id);
@@ -74,11 +73,7 @@ const ModalLeft: React.FC<ModalLeftProps> = ({
                 <div
                   key={c.id}
                   onClick={() => handleActionToCollection(c)}
-                  className="
-                  w-full bg-gray-700 text-white rounded-md py-4 px-4 
-                  flex items-center justify-between group opacity-75 hover:opacity-100 
-                  transition-all duration-300 cursor-pointer
-                "
+                  className="group flex w-full cursor-pointer items-center justify-between rounded-md bg-gray-700 px-4 py-4 text-white opacity-75 transition-all duration-300 hover:opacity-100"
                 >
                   <div>
                     <span className="text-sm">{c.images.length} photos</span>
@@ -91,14 +86,14 @@ const ModalLeft: React.FC<ModalLeftProps> = ({
                       <h3 className="text-lg font-medium">{c.name}</h3>
                     </div>
                   </div>
-                  <button className="opacity-0 invisible group-hover:opacity-100 group-hover:visible transition">
+                  <button className="invisible opacity-0 transition group-hover:visible group-hover:opacity-100">
                     {exists ? <FaMinus /> : <FaPlus />}
                   </button>
                 </div>
               );
             })
           ) : (
-            <p className="text-gray-500 mt-4">No collections yet.</p>
+            <p className="mt-4 text-gray-500">No collections yet.</p>
           )}
         </div>
       </div>

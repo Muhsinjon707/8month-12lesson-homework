@@ -14,29 +14,23 @@ const Register = () => {
   const darkMode = useSelector((state: RootState) => state.darkMode.darkMode);
   return (
     <div
-      className={`
-      ${
-        darkMode == "dark" ? "bg-[#5c566d]" : "bg-white border-2"
-      } w-full h-screen font-mono-sans flex justify-center items-center
-      `}
+      className={` ${
+        darkMode ? "bg-[#5c566d]" : "border-2 bg-white"
+      } font-mono-sans flex h-screen w-full items-center justify-center`}
     >
       <div
-        className={`
-          w-[1000px] h-[650px] absolute top-1/2 left-1/2 -translate-1/2 overflow-y-hidden 
-          flex justify-between gap-8 p-4 rounded-2xl items-center shadow-xl
-          ${darkMode == "dark" ? "bg-[#2c2638]" : "bg-white"} 
-        `}
+        className={`absolute top-1/2 left-1/2 flex h-[650px] w-[1000px] -translate-1/2 items-center justify-between gap-8 overflow-y-hidden rounded-2xl p-4 shadow-xl ${darkMode ? "bg-[#2c2638]" : "bg-white"} `}
       >
         <div>
           <Image
-            className="w-[500px] h-[620px] rounded-2xl"
-            src={`/${darkMode == "dark" ? "black" : "dark-blue"}-texture-medium.jpg`}
+            className="h-[620px] w-[500px] rounded-2xl"
+            src={`/${darkMode ? "black" : "dark-blue"}-texture-medium.jpg`}
             alt="Black Texture"
             width={500}
             height={80}
           />
         </div>
-        <div className="w-1/2 flex flex-col gap-4 justify-center items-start text-white px-10">
+        <div className="flex w-1/2 flex-col items-start justify-center gap-4 px-10 text-white">
           <Signup />
         </div>
       </div>

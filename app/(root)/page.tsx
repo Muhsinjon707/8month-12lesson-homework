@@ -3,7 +3,6 @@
 import React, { useState } from "react";
 
 // components
-import Header from "../components/Header";
 import Products from "../components/Products";
 
 const Home = () => {

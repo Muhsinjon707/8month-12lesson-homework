@@ -27,25 +27,46 @@ import { useSelector, useDispatch } from "react-redux";
 
 // Redux | DarkModaSlice actions
 import { toggleDarkMode } from "../store/slice/darkModeSlice";
+import { logoutUser, setAuthReady } from "../store/slice/loginSlice";
 
 // Redux store config..
 import { RootState } from "../store/store";
 
+// firebase
+import { auth } from "../firebase/firebaseConfig";
+import { signOut } from "firebase/auth";
+
+// Toastify
+import { toast } from "react-toastify";
+
 const Header = () => {
   const [isOpen, setOpen] = useState(false);
+  const [isProfileOpen, setProfileOpen] = useState(false);
 
   const darkMode = useSelector((state: RootState) => state.darkMode.darkMode);
-
-  console.log("Darkmode: ", darkMode);
 
   const dispatch = useDispatch();
 
   const user = useSelector((state: RootState) => state.login.user);
-  console.log(user);
+
+  async function signOutUser() {
+    try {
+      await signOut(auth);
+      dispatch(logoutUser());
+      dispatch(setAuthReady());
+      toast.success("Successfully signed out!");
+    } catch (error: any) {
+      if (error?.message) {
+        toast.error(error.message);
+      } else {
+        toast.error("Couldn't resolve while signing out");
+      }
+    }
+  }
 
   return (
     <header
-      className={` ${darkMode == "dark" ? "bg-[#292434] text-white" : "bg-white text-black"} fixed top-0 right-0 left-0 z-50 mx-auto px-16 py-3 shadow-lg`}
+      className={` ${darkMode ? "bg-[#292434] text-white" : "bg-white text-black"} fixed top-0 right-0 left-0 z-50 mx-auto px-16 py-3 shadow-lg`}
     >
       <nav className="xs:gap-10 xs:flex-row flex w-full flex-col items-center justify-between gap-2 sm:flex-col sm:gap-3 md:gap-4 xl:flex-row">
         <Link
@@ -73,17 +94,17 @@ const Header = () => {
             />
           </div>
           <div className="flex items-center gap-5">
-            <div
+            <button
               onClick={() => dispatch(toggleDarkMode())}
-              title={`The current mode is: ${darkMode}`}
-              className="scale-200 cursor-pointer"
+              title={`Toggle to ${darkMode ? "Light" : "Dark"} Mode`}
+              className="p-2 text-xl transition-all hover:scale-110"
             >
-              {darkMode === "dark" ? (
+              {darkMode ? (
                 <WiMoonAltWaningGibbous2 />
               ) : (
                 <WiMoonAltWaningCrescent5 />
               )}
-            </div>
+            </button>
             <div
               onClick={() => setOpen(true)}
               className="mx-2 scale-200 cursor-pointer"
@@ -92,12 +113,18 @@ const Header = () => {
             </div>
             <div className="group relative flex items-center">
               <img
-                src={user?.photoURL || "/default-avatar.png"}
+                onClick={() => setProfileOpen(!isProfileOpen)}
+                src={
+                  user?.photoURL ||
+                  `https://api.dicebear.com/9.x/initials/svg?seed=${user?.displayName}`
+                }
                 alt={user?.displayName || "User Avatar"}
-                className="h-14 w-14 rounded-full border-2 border-gray-300 shadow-md transition-all duration-300 hover:scale-105"
+                className="hidden h-14 w-14 rounded-full border-2 border-gray-300 shadow-md transition-all duration-300 hover:scale-105 xl:block"
               />
 
-              <div className="absolute top-16 right-0 hidden w-74 flex-col gap-3 rounded-lg border border-gray-200 bg-white p-4 shadow-xl group-hover:flex dark:border-gray-700 dark:bg-gray-900">
+              <div
+                className={`absolute top-16 right-0 w-74 flex-col gap-3 rounded-lg border border-gray-200 bg-white p-4 shadow-xl ${isProfileOpen ? "flex" : "hidden"} dark:border-gray-700 dark:bg-gray-900`}
+              >
                 <h4 className="text-sm font-semibold text-gray-800 dark:text-white">
                   Name:{" "}
                   <span className="font-normal">
@@ -108,6 +135,9 @@ const Header = () => {
                   Email:{" "}
                   <span className="font-normal">{user?.email || "N/A"}</span>
                 </h3>
+                <button onClick={signOutUser} className="text-start">
+                  Logout
+                </button>
               </div>
             </div>
 
@@ -121,6 +151,15 @@ const Header = () => {
               <div className="absolute top-4 right-4 scale-180 cursor-pointer">
                 <MdOutlinePlaylistRemove onClick={() => setOpen(false)} />
               </div>
+              <img
+                onClick={() => setProfileOpen(!isProfileOpen)}
+                src={
+                  user?.photoURL ||
+                  `https://api.dicebear.com/9.x/initials/svg?seed=${user?.displayName}`
+                }
+                alt={user?.displayName || "User Avatar"}
+                className="block h-14 w-14 rounded-full border-2 border-gray-300 shadow-md transition-all duration-300 hover:scale-105 xl:hidden"
+              />
               <li className="mt-10 w-full">
                 <Link
                   href="/"

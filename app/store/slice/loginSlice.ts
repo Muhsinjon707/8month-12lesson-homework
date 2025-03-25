@@ -13,6 +13,7 @@ interface AuthState {
   isAuthenticated: boolean;
   loading: boolean;
   error: string | null;
+  authReady: boolean;
 }
 
 const initialState: AuthState = {
@@ -20,6 +21,7 @@ const initialState: AuthState = {
   isAuthenticated: false,
   loading: false,
   error: null,
+  authReady: false
 };
 
 const loginSlice = createSlice({
@@ -50,9 +52,12 @@ const loginSlice = createSlice({
     setLoading: (state, action: PayloadAction<boolean>) => {
       state.loading = action.payload;
     },
+    setAuthReady: (state) => {
+      state.authReady = true;
+    }
   },
 });
 
 export default loginSlice.reducer;
-export const { loginUser, logoutUser, setUser, setAuthError, setLoading } =
+export const { loginUser, logoutUser, setUser, setAuthError, setLoading, setAuthReady } =
   loginSlice.actions;

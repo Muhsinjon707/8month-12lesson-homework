@@ -1,33 +1,34 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
+const getInitialDarkMode = () => {
+  if (typeof window !== "undefined") {
+    return JSON.parse(localStorage.getItem("darkMode") || "false");
+  }
+  return false;
+};
+
 const initialState = {
-  darkMode: null as string | null
+  darkMode: getInitialDarkMode(),
 };
 
 const darkModeSlice = createSlice({
   name: "darkMode",
   initialState,
   reducers: {
-    setDarkMode: (state, action: PayloadAction<string>) => {
-      state.darkMode = action.payload;
-      if (typeof window !== "undefined") {
-        localStorage.setItem("darkMode", action.payload);
-      }
-    },
     toggleDarkMode: (state) => {
-      const newMode = state.darkMode === "light" ? "dark" : "light";
-      state.darkMode = newMode;
-      if (typeof window !== "undefined") {
-        localStorage.setItem("darkMode", newMode);
-      }
+      state.darkMode = !state.darkMode;
+      localStorage.setItem("darkMode", JSON.stringify(state.darkMode));
     },
-    hydrateDarkMode: (state) => {
-      if (typeof window !== "undefined") {
-        state.darkMode = localStorage.getItem("darkMode") || "light";
-      }
+    setDarkMode: (state) => {
+      state.darkMode = true;
+      localStorage.setItem("darkMode", "true");
+    },
+    setLightMode: (state) => {
+      state.darkMode = false;
+      localStorage.setItem("darkMode", "false");
     },
   },
 });
 
 export default darkModeSlice.reducer;
-export const { toggleDarkMode, setDarkMode, hydrateDarkMode } = darkModeSlice.actions;
+export const { toggleDarkMode, setDarkMode, setLightMode } = darkModeSlice.actions;

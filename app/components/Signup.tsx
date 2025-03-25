@@ -8,8 +8,9 @@ import { FaRegEye } from "react-icons/fa";
 import validationRegister from "../utils/validationRegister";
 import { useSelector } from "react-redux";
 import { RootState } from "../store/store";
+import { useRegister } from "../hooks/useRegister";
 
-const Signin = () => {
+const Signup = () => {
   const [show, setShow] = useState(false);
 
   const [errors, setErrors] = useState<string[]>([]);
@@ -20,6 +21,8 @@ const Signin = () => {
   const [terms, setTerms] = useState(false);
 
   const darkMode = useSelector((state: RootState) => state.darkMode.darkMode);
+  
+  const { registerWithEmail } = useRegister();
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -29,17 +32,23 @@ const Signin = () => {
       lastName,
       email,
       password,
-      terms
+      terms,
     );
 
-    setErrors(validationErrors);
+    if (validationErrors) {
+      setErrors(validationErrors);
+    }
   }
+
+  const customUsername = firstName + " " + lastName;
 
   return (
     <>
-      <h2 className={`${darkMode == "dark" ? "text-white" : "text-black"} text-4xl mb-5`}>Create an account</h2>
+      <h2 className={`${darkMode ? "text-white" : "text-black"} mb-5 text-4xl`}>
+        Create an account
+      </h2>
       {errors.length > 0 && (
-        <div className="text-red-500 text-sm">
+        <div className="text-sm text-red-500">
           {errors.map((err, index) => (
             <p key={index}>• {err}</p>
           ))}
@@ -47,62 +56,56 @@ const Signin = () => {
       )}
       <form
         onSubmit={handleSubmit}
-        className="w-full h-1/2 flex flex-col gap-4"
+        className="flex h-1/2 w-full flex-col gap-4"
       >
-        <div className="flex gap-3 items-center justify-between">
+        <div className="flex items-center justify-between gap-3">
           <input
             value={firstName}
             onChange={(e) => setFirstName(e.target.value)}
-            className={`
-              p-3 w-1/2 rounded-md outline-none ${
-                darkMode == "dark" ? "bg-[#3c364c]" : "bg-white shadow caret-slate-700"
-              } 
-            `}
+            className={`w-1/2 rounded-md p-3 outline-none ${
+              darkMode ? "bg-[#3c364c]" : "bg-white caret-slate-700 shadow"
+            } `}
             type="text"
             placeholder="First name"
-            style={{color: darkMode == "dark" ? "white" : "black"}}
+            style={{ color: darkMode ? "white" : "black" }}
           />
           <input
             value={lastName}
             onChange={(e) => setLastName(e.target.value)}
-            className={`
-              p-3 w-1/2 rounded-md outline-none ${
-                darkMode == "dark" ? "bg-[#3c364c]" : "bg-white shadow caret-slate-700"
-              } 
-            `}
+            className={`w-1/2 rounded-md p-3 outline-none ${
+              darkMode ? "bg-[#3c364c]" : "bg-white caret-slate-700 shadow"
+            } `}
             type="text"
             placeholder="Last name"
-            style={{color: darkMode == "dark" ? "white" : "black"}}
+            style={{ color: darkMode ? "white" : "black" }}
           />
         </div>
         <div>
           <input
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className={`
-              p-3 w-full rounded-md outline-none ${
-                darkMode == "dark" ? "bg-[#3c364c]" : "bg-white shadow caret-slate-700"
-              } 
-            `}
+            className={`w-full rounded-md p-3 outline-none ${
+              darkMode ? "bg-[#3c364c]" : "bg-white caret-slate-700 shadow"
+            } `}
             type="email"
             placeholder="Email"
-            style={{color: darkMode == "dark" ? "white" : "black"}}
+            style={{ color: darkMode ? "white" : "black" }}
           />
         </div>
         <div className="relative">
           <input
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            className={`
-              p-3 w-full rounded-md outline-none ${
-                darkMode == "dark" ? "bg-[#3c364c]" : "bg-white shadow caret-slate-700"
-              } 
-            `}
+            className={`w-full rounded-md p-3 outline-none ${
+              darkMode ? "bg-[#3c364c]" : "bg-white caret-slate-700 shadow"
+            } `}
             type={show ? "text" : "password"}
             placeholder="Enter your password"
-            style={{color: darkMode == "dark" ? "white" : "black"}}
+            style={{ color: darkMode ? "white" : "black" }}
           />
-          <div className={`${password == "" && "hidden"} cursor-pointer text-[#4a4063]`}>
+          <div
+            className={`${password == "" && "hidden"} cursor-pointer text-[#4a4063]`}
+          >
             {!show ? (
               <FaRegEyeSlash
                 onClick={() => setShow(!show)}
@@ -123,18 +126,22 @@ const Signin = () => {
             onChange={(e) => setTerms(e.target.checked)}
             type="checkbox"
           />
-          <p className={`text-sm ${darkMode == "dark" ? "text-white" : "text-black"}`}>
+          <p className={`text-sm ${darkMode ? "text-white" : "text-black"}`}>
             I agree to the{" "}
-            <Link className={`underline ml-1 ${darkMode == "dark" ? "text-[#9685b6]" : "text-blue-950"}`} href="#">
+            <Link
+              className={`ml-1 underline ${darkMode ? "text-[#9685b6]" : "text-blue-950"}`}
+              href="#"
+            >
               Terms & Conditions
             </Link>
           </p>
         </div>
         <div>
           <button
+            onClick={() => registerWithEmail(customUsername, email, password)}
             className={`w-full py-3 ${
-              darkMode == "dark" ? "bg-violet-500" : "bg-black"
-            } rounded-md mt-5`}
+              darkMode ? "bg-violet-500" : "bg-black"
+            } mt-5 rounded-md`}
           >
             Create account
           </button>
@@ -144,4 +151,4 @@ const Signin = () => {
   );
 };
 
-export default Signin;
+export default Signup;

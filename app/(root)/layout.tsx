@@ -12,7 +12,7 @@ export default function Layout({
   const darkMode = useSelector((state: RootState) => state.darkMode.darkMode);
 
   return (
-    <main className={`w-full ${darkMode == "dark" ? "bg-[#5c566d]" : "bg-white"}`}>
+    <main className={`w-full ${darkMode ? "bg-[#5c566d]" : "bg-white"}`}>
       <Header />
       {children}
     </main>

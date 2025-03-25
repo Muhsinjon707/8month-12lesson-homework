@@ -45,7 +45,7 @@ const DownloadsList = ({ images }: DownloadsProps) => {
             className={`
                 w-[32%] shadow-lg hover:shadow-xl min-h-[420px] 
                 rounded-lg p-4 flex flex-col items-start justify-start gap-2  
-                ${darkMode == "dark" ? "bg-[#473e5a] shadow-0" : "bg-white shadow-gray-400"}
+                ${darkMode ? "bg-[#473e5a] shadow-0" : "bg-white shadow-gray-400"}
             `}
           >
             <img

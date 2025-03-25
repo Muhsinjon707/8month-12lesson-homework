@@ -15,13 +15,14 @@ import validationLogin from "../utils/validationLogin";
 import { useSelector } from "react-redux";
 import { RootState } from "../store/store";
 
-// Register hooks
+// Register & Login hooks
 import { useRegister } from "../hooks/useRegister";
+import { useLogin } from "../hooks/useLogin";
 
 // toaster
 import { toast } from "react-toastify";
 
-const Signup = () => {
+const Signin = () => {
   const [show, setShow] = useState(false);
 
   const [errors, setErrors] = useState<string[]>([]);
@@ -30,25 +31,25 @@ const Signup = () => {
   const [password, setPassword] = useState("");
   const [doRemember, setRemember] = useState(false);
 
+  const darkMode = useSelector((state: RootState) => state.darkMode.darkMode);
+
+  const { registerWithGoogle } = useRegister();
+  const { loginWithEmail } = useLogin();
+
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
 
     const validationErrors = validationLogin(email, password);
 
-    setErrors(validationErrors);
+    if (validationErrors) {
+      setErrors(validationErrors);
+      return;
+    }
   }
-
-  const darkMode = useSelector((state: RootState) => state.darkMode.darkMode);
-
-  const { registerWithGoogle } = useRegister();
 
   return (
     <>
-      <h2
-        className={`${
-          darkMode == "dark" ? "text-white" : "text-black"
-        } mb-5 text-3xl`}
-      >
+      <h2 className={`${darkMode ? "text-white" : "text-black"} mb-5 text-3xl`}>
         Login First to Your Account
       </h2>
       {errors.length > 0 && (
@@ -67,13 +68,13 @@ const Signup = () => {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             className={`w-full rounded-md border-black p-3 shadow-md outline-none ${
-              darkMode == "dark"
+              darkMode
                 ? "caret-black-500 bg-[#3c364c]"
                 : "bg-white caret-blue-600"
             }`}
             type="email"
             placeholder="Email"
-            style={{ color: darkMode === "dark" ? "white" : "black" }}
+            style={{ color: darkMode ? "white" : "black" }}
           />
         </div>
         <div className="relative">
@@ -81,13 +82,11 @@ const Signup = () => {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             className={`w-full rounded-md border-black p-3 shadow-md outline-none ${
-              darkMode == "dark"
-                ? "bg-[#3c364c] caret-black"
-                : "bg-white caret-blue-600"
+              darkMode ? "bg-[#3c364c] caret-black" : "bg-white caret-blue-600"
             }`}
             type={show ? "text" : "password"}
             placeholder="Enter your password"
-            style={{ color: darkMode === "dark" ? "white" : "black" }}
+            style={{ color: darkMode ? "white" : "black" }}
           />
           <div className="cursor-pointer text-[#4a4063]">
             {!show ? (
@@ -111,18 +110,14 @@ const Signup = () => {
               className="login-custom-checkbox"
               type="checkbox"
             />
-            <p
-              className={`${
-                darkMode == "dark" ? "text-white" : "text-black"
-              } text-sm`}
-            >
+            <p className={`${darkMode ? "text-white" : "text-black"} text-sm`}>
               Remember me
             </p>
           </div>
           <Link
             href="/"
             className={`${
-              darkMode == "dark" ? "text-green-300" : "text-blue-300"
+              darkMode ? "text-green-300" : "text-blue-300"
             } underline`}
           >
             Forgot Password
@@ -132,7 +127,7 @@ const Signup = () => {
           <Link
             href="/register"
             className={`${
-              darkMode == "dark" ? "text-violet-800" : "text-blue-500"
+              darkMode ? "text-violet-800" : "text-blue-500"
             } underline`}
           >
             Register here
@@ -140,8 +135,9 @@ const Signup = () => {
         </div>
         <div>
           <button
+            onClick={() => loginWithEmail(email, password)}
             className={`w-full py-3 ${
-              darkMode == "dark" ? "bg-violet-500" : "bg-blue-500"
+              darkMode ? "bg-violet-500" : "bg-blue-500"
             } mt-5 rounded-md`}
           >
             Login
@@ -154,17 +150,17 @@ const Signup = () => {
         </div>
         <div
           className={`flex items-center justify-between gap-3 ${
-            darkMode == "dark" ? "text-white" : "text-black"
+            darkMode ? "text-white" : "text-black"
           }`}
         >
           <button
             onClick={registerWithGoogle}
-            className={`inline-flex w-1/2 cursor-pointer items-center justify-center gap-2 rounded-md border py-2 opacity-70 ${darkMode == "dark" ? "border-white" : "border-black"} `}
+            className={`inline-flex w-1/2 cursor-pointer items-center justify-center gap-2 rounded-md border py-2 opacity-70 ${darkMode ? "border-white" : "border-black"} `}
           >
             <FcGoogle id="google-login-btn" className="scale-125" /> Google
           </button>
           <button
-            className={`inline-flex w-1/2 cursor-pointer items-center justify-center gap-2 rounded-md border py-2 opacity-70 ${darkMode == "dark" ? "border-white" : "border-black"} `}
+            className={`inline-flex w-1/2 cursor-pointer items-center justify-center gap-2 rounded-md border py-2 opacity-70 ${darkMode ? "border-white" : "border-black"} `}
           >
             <FaGithub className="scale-125" /> GitHub
           </button>
@@ -174,4 +170,4 @@ const Signup = () => {
   );
 };
 
-export default Signup;
+export default Signin;

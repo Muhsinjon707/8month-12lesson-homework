@@ -17,26 +17,25 @@ const CustomInput = ({ type, placeholder, name }: InputTypes) => {
   const dispatch = useDispatch();
 
   const searchQuery = useSelector(
-    (state: RootState) => state.search.searchQuery
+    (state: RootState) => state.search.searchQuery,
   );
 
   const darkMode = useSelector((state: RootState) => state.darkMode.darkMode);
 
   return (
     <label
-      className={`
-        xs:w-[320px] sm:w-[500px] flex items-center rounded-lg px-3 py-3 sm:mb-2 md:mb-0 
-        ${
-          darkMode == "dark" ? "bg-[#3b334d] text-white shadow-xl" : "bg-white text-black shadow"
-        }
-      `}
+      className={`xs:w-[320px] flex items-center rounded-lg px-3 py-3 sm:mb-2 sm:w-[500px] md:mb-0 ${
+        darkMode
+          ? "bg-[#3b334d] text-white shadow-xl"
+          : "bg-white text-black shadow"
+      } `}
     >
       <svg
         className="h-4 w-4 sm:h-5 sm:w-5 md:h-6 md:w-6"
         xmlns="http://www.w3.org/2000/svg"
         fill="none"
         viewBox="0 0 24 24"
-        stroke={`${darkMode == "dark" ? "white" : "black"}`}
+        stroke={`${darkMode ? "white" : "black"}`}
       >
         <path
           strokeLinecap="round"
@@ -52,13 +51,14 @@ const CustomInput = ({ type, placeholder, name }: InputTypes) => {
         type={type}
         placeholder={placeholder}
         name={name}
-        className="w-full ml-2 sm:ml-3 text-xs sm:text-sm md:text-base focus:outline-none"
+        className={`ml-2 w-full text-xs focus:outline-none sm:ml-3 sm:text-sm md:text-base placeholder:${darkMode ? "text-white" : "text-black"}`}
+        style={{ color: darkMode ? "white" : "black" }}
       />
 
       {searchQuery && (
         <button
           onClick={() => dispatch(setSearchQuery(""))}
-          className="text-gray-500 hover:text-black ml-2 sm:ml-3 cursor-pointer"
+          className="ml-2 cursor-pointer text-gray-500 hover:text-black sm:ml-3"
         >
           ✖
         </button>

@@ -2,11 +2,17 @@
 import { toast } from "react-toastify";
 import { auth } from "../firebase/firebaseConfig";
 
-import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
+import {
+  GoogleAuthProvider,
+  signInWithPopup,
+  createUserWithEmailAndPassword,
+  updateProfile,
+} from "firebase/auth";
 
 // Redux config..
 import { useDispatch } from "react-redux";
 import { loginUser } from "../store/slice/loginSlice";
+import { useRouter } from "next/navigation";
 
 export const useRegister = () => {
   const dispatch = useDispatch();
@@ -29,12 +35,39 @@ export const useRegister = () => {
         };
 
         dispatch(loginUser(userData));
-        toast.success("Successfully authenticated");
+        toast.success(`Successfully authenticated ${firebaseUser.displayName}`);
       })
       .catch((error) => {
         toast.error(error.message);
       });
   };
 
-  return { registerWithGoogle };
+  const router = useRouter()
+  const registerWithEmail = (
+    username: string,
+    email: string,
+    password: string,
+  ) => {
+    createUserWithEmailAndPassword(auth, email, password)
+      .then(async (userCreadentials) => {
+        const firebaseUser = userCreadentials.user;
+        await updateProfile(firebaseUser, {
+          displayName: username,
+        });
+
+        console.log(firebaseUser);
+
+        const userData = {
+          email: firebaseUser.email,
+          displayName: firebaseUser.displayName,
+        };
+
+        dispatch(loginUser(userData));
+        toast.success(`Welcome. Registered using email and password`);
+        router.push("/login");
+      })
+      .catch((error) => toast.error(error.message));
+  };
+
+  return { registerWithGoogle, registerWithEmail };
 };
