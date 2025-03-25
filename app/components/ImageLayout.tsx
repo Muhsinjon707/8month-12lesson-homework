@@ -39,6 +39,7 @@ import {
   addToDownloads,
   removeFromDownloads,
 } from "../store/slice/downloadsSlice";
+import { closeWindow } from "../store/slice/burgerMenuSlice";
 
 interface ImageLayoutProps {
   images: UnsplashPhoto[];
@@ -102,7 +103,10 @@ const ImageLayout: React.FC<ImageLayoutProps> = ({ images }) => {
                 transition={{ duration: 0.5, ease: "easeInOut" }}
                 key={image.id}
                 className="relative group text-white"
-                onClick={(e) => e.stopPropagation()}
+                onClick={(e) => {
+                  e.stopPropagation()
+                  dispatch(closeWindow())
+                }}
               >
                 <div
                   className="

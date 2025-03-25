@@ -88,19 +88,21 @@ const Signin = () => {
             placeholder="Enter your password"
             style={{ color: darkMode ? "white" : "black" }}
           />
-          <div className="cursor-pointer text-[#4a4063]">
-            {!show ? (
-              <FaRegEyeSlash
-                onClick={() => setShow(!show)}
-                className="absolute top-1/2 right-1 -translate-1/2"
-              />
-            ) : (
-              <FaRegEye
-                onClick={() => setShow(!show)}
-                className="absolute top-1/2 right-1 -translate-1/2"
-              />
-            )}
-          </div>
+          {password && (
+            <div className="cursor-pointer text-[#4a4063]">
+              {!show ? (
+                <FaRegEyeSlash
+                  onClick={() => setShow(!show)}
+                  className="absolute top-1/2 right-1 -translate-1/2"
+                />
+              ) : (
+                <FaRegEye
+                  onClick={() => setShow(!show)}
+                  className="absolute top-1/2 right-1 -translate-1/2"
+                />
+              )}
+            </div>
+          )}
         </div>
         <div className="flex items-center justify-between">
           <div className="flex gap-3">

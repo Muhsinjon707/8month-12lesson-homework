@@ -1,7 +1,7 @@
 "use client";
 
 // react
-import React, { useEffect, useState } from "react";
+import React from "react";
 
 // next links
 import Link from "next/link";
@@ -17,6 +17,7 @@ import { FaDownload } from "react-icons/fa6";
 import { BsFillCollectionFill } from "react-icons/bs";
 import { LuLogIn } from "react-icons/lu";
 import { HiMiniPhoto } from "react-icons/hi2";
+import { MdFavorite } from "react-icons/md";
 
 // Dark/Light Mode icons
 import { WiMoonAltWaningCrescent5 } from "react-icons/wi";
@@ -167,6 +168,17 @@ const Header = () => {
                   Downloads
                   <span>
                     <FaDownload />
+                  </span>
+                </Link>
+              </li>
+              <li className="w-full">
+                <Link
+                  href="/favorites"
+                  className="flex w-full items-center justify-between rounded-lg bg-white p-3 text-lg font-medium text-black transition-all duration-200 hover:bg-gray-300 hover:text-white"
+                >
+                  Favorites
+                  <span>
+                    <MdFavorite />
                   </span>
                 </Link>
               </li>
