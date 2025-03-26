@@ -14,6 +14,10 @@ import { useDebounce } from "use-debounce";
 // interface
 import { UnsplashPhoto } from "../model/UnspashPhoto";
 
+// Redux actions
+import { closeWindow } from "../store/slice/burgerMenuSlice";
+import { closeCollectionModal } from "../store/slice/modalSlice";
+
 interface UnsplashResponse {
   results: UnsplashPhoto[];
 }
@@ -64,8 +68,16 @@ const Products = () => {
     }
   }, [debouncedQuery]);
 
+  const dispatch = useDispatch()
+
   return (
-    <div className="mt-24 flex flex-col items-center">
+    <div
+      onClick={() => {
+        dispatch(closeWindow());
+        dispatch(closeCollectionModal());
+      }}
+      className="mt-24 flex flex-col items-center"
+    >
       {isPending && <div>Loading...</div>}
       {isError && (
         <p className="text-red-500">

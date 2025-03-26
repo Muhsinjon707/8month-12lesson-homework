@@ -82,7 +82,7 @@ const ImageLayout: React.FC<ImageLayoutProps> = ({ images }) => {
     downloadsList.some((item) => item.id === imageId);
 
   const { addDocumentToDownloads, deleteDocumentFromDownloads } =
-  useFirestore();
+    useFirestore();
 
   // Handle Add/Remove from Downloads
   function handleAddToDownloads(image: UnsplashPhoto) {
@@ -94,7 +94,7 @@ const ImageLayout: React.FC<ImageLayoutProps> = ({ images }) => {
   }
 
   return (
-    <div className="w-full" onClick={() => dispatch(closeCollectionModal())}>
+    <div className="w-full">
       <ResponsiveMasonry
         columnsCountBreakPoints={{ 500: 1, 640: 2, 750: 3, 1024: 4 }}
       >
@@ -107,10 +107,7 @@ const ImageLayout: React.FC<ImageLayoutProps> = ({ images }) => {
                 transition={{ duration: 0.5, ease: "easeInOut" }}
                 key={image.id}
                 className="group relative text-white"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  dispatch(closeWindow());
-                }}
+                onClick={() => dispatch(closeWindow())}
               >
                 <div className="duraction-300 invisible absolute top-0 left-0 flex w-full items-center justify-between px-3 py-2 opacity-0 transition-all group-hover:visible group-hover:opacity-100">
                   <span>{image.promoted_at && "Promoted"}</span>
@@ -127,7 +124,10 @@ const ImageLayout: React.FC<ImageLayoutProps> = ({ images }) => {
                       <FaHeart />
                     </button>
                     <button
-                      onClick={() => dispatch(openCollectionModal(image))}
+                      onClick={(e) => {
+                        e.stopPropagation()
+                        dispatch(openCollectionModal(image))
+                      }}
                       className="cursor-pointer rounded-lg border border-gray-300 bg-white px-[12px] py-2 text-sm text-black opacity-50 shadow-sm transition duration-300 hover:border-gray-400 hover:opacity-65"
                       title="Add to a collection"
                     >

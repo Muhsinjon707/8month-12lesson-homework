@@ -42,6 +42,9 @@ const CollectionModal: React.FC = () => {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
+      onClick={() => {
+        dispatch(closeCollectionModal());
+      }}
       transition={{ duration: 0.3 }}
       className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-grayscale-50"
     >
@@ -60,6 +63,7 @@ const CollectionModal: React.FC = () => {
         animate={{ y: 0, opacity: 1, scale: 1 }}
         exit={{ y: 50, opacity: 0, scale: 0.95 }}
         transition={{ duration: 0.4, ease: "easeInOut" }}
+        onClick={(e) => e.stopPropagation()}
         className="relative flex min-h-[65%] w-[55%] max-w-7xl items-start justify-start gap-3 overflow-hidden rounded-lg bg-white shadow-lg"
       >
         <motion.div

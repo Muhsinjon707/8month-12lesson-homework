@@ -22,10 +22,6 @@ import { AiOutlineLike } from "react-icons/ai";
 // Addition libraries
 import { motion } from "framer-motion";
 import { UnsplashPhoto } from "../model/UnspashPhoto";
-import {
-  addToFavorites,
-  removeFromFavorites,
-} from "../store/slice/favoritesSlice";
 import { useFirestore } from "../hooks/useFirestore";
 import { useCollection } from "../hooks/useCollection";
 
