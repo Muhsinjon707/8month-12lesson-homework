@@ -31,10 +31,8 @@ import { UnsplashPhoto } from "../model/UnspashPhoto";
 
 // Framer motion
 import { motion } from "framer-motion";
-import {
-  addToDownloads,
-  removeFromDownloads,
-} from "../store/slice/downloadsSlice";
+
+// Redux | Modal actions
 import { closeWindow } from "../store/slice/burgerMenuSlice";
 
 // useFirestore
@@ -175,7 +173,7 @@ const ImageLayout: React.FC<ImageLayoutProps> = ({ images }) => {
                   </div>
                   <span
                     className="cursor-pointer rounded-lg border border-gray-300 bg-white px-[12px] py-2 text-sm text-black opacity-50 shadow-sm transition duration-300 hover:border-gray-400 hover:opacity-65"
-                    title="Add to a collection"
+                    title="Add to downloads"
                   >
                     <a
                       onClick={() => handleAddToDownloads(image)}

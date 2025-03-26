@@ -50,7 +50,7 @@ const ModalLeft: React.FC<ModalLeftProps> = ({
   }
 
   return (
-    <div className="w-[60%] px-6 py-7">
+    <div onClick={(e) => e.stopPropagation()} className="w-[60%] px-6 py-7">
       <h2 className="text-2xl font-bold">Add to Collection</h2>
 
       <div className="mt-8 flex w-full flex-col items-start gap-3">
