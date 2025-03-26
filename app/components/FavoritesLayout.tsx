@@ -19,10 +19,6 @@ import { openCollectionModal, openImageModal } from "../store/slice/modalSlice";
 import { useDispatch, useSelector } from "react-redux";
 
 // Redux actions
-import {
-  addToDownloads,
-  removeFromDownloads,
-} from "../store/slice/downloadsSlice";
 import { RootState } from "../store/store";
 
 // Modal components
@@ -32,21 +28,21 @@ import CollectionModal from "./CollectionModal";
 // Cloud store
 import { useCollection } from "../hooks/useCollection";
 import { useFirestore } from "../hooks/useFirestore";
-
+import Nothing from "./extra/Nothing";
 
 const FavoritesLayout = () => {
   const dispatch = useDispatch();
 
   // Handling downlaods storage
-  const { addDocumentToDownloads, deleteDocumentFromDownloads } = useFirestore();
+  const { addDocumentToDownloads, deleteDocumentFromDownloads } =
+    useFirestore();
 
   // Downloads List
-  const {data: downloadsList} = useCollection("downlaods");
+  const { data: downloadsList } = useCollection("downlaods");
 
   // Check if image is in downloads
   const isInDownloads = (imageId: string) =>
     downloadsList.some((item) => item.id === imageId);
-
 
   // Handle Add/Remove from Downloads
   function handleAddToDownloads(image: UnsplashPhoto) {
@@ -57,10 +53,11 @@ const FavoritesLayout = () => {
     }
   }
 
-  const {data: favoritesList} = useCollection("favorites");
+  const { data: favoritesList } = useCollection("favorites");
 
   // Handling favorites storage
-  const { addDocumentToFavorites, deleteDocumentFromFavorites } = useFirestore();
+  const { addDocumentToFavorites, deleteDocumentFromFavorites } =
+    useFirestore();
 
   // Check if image is in favorites
   const isFavorite = (imageId: string) =>
@@ -174,7 +171,7 @@ const FavoritesLayout = () => {
               </motion.div>
             ))
           ) : (
-            <div></div>
+            <Nothing />
           )}
         </Masonry>
       </ResponsiveMasonry>

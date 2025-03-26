@@ -68,7 +68,7 @@ const Products = () => {
     }
   }, [debouncedQuery]);
 
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
 
   return (
     <div
@@ -76,18 +76,25 @@ const Products = () => {
         dispatch(closeWindow());
         dispatch(closeCollectionModal());
       }}
-      className="mt-24 flex flex-col items-center"
+      className="mt-40 xl:mt-24 flex flex-col items-center"
     >
-      {isPending && <div>Loading...</div>}
+      {isPending && (
+        Array.from({ length: 20 }).map((_, index) => (
+          <div key={index} className="flex w-52 flex-col gap-4">
+            <div className="skeleton h-32 w-full"></div>
+            <div className="skeleton h-4 w-28"></div>
+            <div className="skeleton h-4 w-full"></div>
+            <div className="skeleton h-4 w-full"></div>
+          </div>
+        ))
+      )}
       {isError && (
         <p className="text-red-500">
           Failed to fetch images. Please try again later.
         </p>
       )}
-      {filteredImages.length > 0 ? (
+      {!isPending && filteredImages.length > 0 && (
         <ImageLayout images={filteredImages} />
-      ) : (
-        !isPending && <p>No images found for "{debouncedQuery}"</p>
       )}
 
       {!isPending && (

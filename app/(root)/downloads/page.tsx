@@ -16,7 +16,7 @@ const Downlaods = () => {
   return (
     <div className="container mx-auto mt-24 min-h-screen max-w-6xl">
       <h2
-        className={`text-2xl font-extrabold ${darkMode ? "text-black" : "text-white"}`}
+        className={`text-2xl font-extrabold ${darkMode ? "text-white" : "text-black"}`}
       >
         Downloads List
       </h2>
